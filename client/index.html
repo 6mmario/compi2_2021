@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <!-- Hojas de estilos para la pagina -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<!-- #145a32  ,   #229954 -->
+
+<body class="body">
+    <!-- Menú superior -->
+    <div class="container">
+        <div class="row">
+            <div class="topnav">
+                <a href="#" id="aImport">Abrir</a><input type="file" id="importFile" onchange="showFile()">
+                <a href="#" id="aCreate">Crear</a>
+                <a href="#" id="aSave">Guardar</a>
+                <a href="#" id="aCompile">Analizar</a>
+                <a href="#" id="aReportError">Errores</a>
+                <a href="#" id="aReportTokens">Tokens</a>
+                <a href="#" id="ast">AST</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Div que contiene las pestañas de los editores de código -->
+    <div class="container">
+        <div class="row">
+            <div class="col-3" id="tabs">
+                <ul>
+                </ul>
+            </div>
+        </div>
+    </div>
+<br>
+    <!-- Div que contiene las pestañas de Variables, Errores | HTML, JSON -->
+    <div class="container">
+        <div class="row">
+            <div class="col-3" id="tabs3">
+                <h6>Javascript</h6>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <!-- Scripts necesarios para el funcionamiento de operaciones Javascript   -->
+
+    <script src="js_files/fileSaver.js" type="text/javascript"></script>
+    <script src="js_files/jquery-2.0.3.min.js" type="text/javascript"></script>
+    <script src="js_files/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="js_files/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js_files/src-min-noconflict/theme-eclipse.js" type="text/javascript"></script>
+    <script src="js_files/src-min-noconflict/theme-monokai.js" type="text/javascript"></script>
+    <script src="js_files/src-min-noconflict/mode-java.js" type="text/javascript"></script>
+
+    <script src="js_files/src-min-noconflict/theme-twilight.js" type="text/javascript"></script>
+
+    <!-- ********************************************* ESCRIP PARA LA INTERFAZ GRAFICA ********************* -->
+    <script type="text/javascript">
+        var var_html;
+        //Al darse click en la opción Abrir se hace trigger a la apertura del fileDilog para elección de un archivo.
+        $("#aImport").click(function (e) {
+            e.preventDefault();
+            $("#importFile").trigger('click');
+        });
+
+        //------------------------------------FUNCION QUE DESCARGA EL JS-------------------------------------
+        function descargarJS() {
+            fetch('/proyecto2-compi1/traduceJS')
+                .then(response => {
+                    if (response.status == 200) {
+                        return response.text();
+                    } else {
+                        throw "Respuesta incorrecta del servidor"
+                    }
+                })
+                .then(responseText => {
+                    let respuesta = JSON.parse(responseText).results;
+                    descargarArchivo(generarTexto(respuesta), 'traduccion.js');
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+        }
+        function descargarArchivo(contenidoEnBlob, nombreArchivo) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var save = document.createElement('a');
+                save.href = event.target.result;
+                save.target = '_blank';
+                save.download = nombreArchivo || 'archivo.dat';
+                var clicEvent = new MouseEvent('click', {
+                    'view': window,
+                    'bubbles': true,
+                    'cancelable': true
+                });
+                save.dispatchEvent(clicEvent);
+                (window.URL || window.webkitURL).revokeObjectURL(save.href);
+            };
+            reader.readAsDataURL(contenidoEnBlob);
+        };
+        function generarTexto(datos) {
+            var texto = [];
+            texto.push(datos);
+            //El contructor de Blob requiere un Array en el primer parámetro
+            //así que no es necesario usar toString. el segundo parámetro
+            //es el tipo MIME del archivo
+            return new Blob(texto, {
+                type: 'text/plain'
+            });
+        };
+        //--------------------------------------------------------------------------------------------------------
+        $("#ast").click(function (e) {
+            var win = window.open('/proyecto2-compi1/AST', '_blank');
+            win.focus();
+        });
+
+        $("#aReportError").click(function (e) {
+            ventana_errores('/proyecto2-compi1/errores');
+        });
+
+        function ventana_errores(url) { // abrir ventana de errores
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
+
+        $("#aReportTokens").click(function (e) {
+            ventana_tokens('/proyecto2-compi1/tokens');
+        });
+
+        function ventana_tokens(url) { // abrir ventana de tokens
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
+
+        //Método para guardar el archivo en el editor seleccionado
+        $("#aSave").click(function (e) {
+            var fileName = prompt("Nombre a dar al archivo", "");
+            if (fileName == undefined) {
+                return;
+            }
+
+            var selectedTab = $("#tabs").tabs('option', 'active');
+            var tabUniqueId = $(this).parent().attr('data-tab-id');
+            var resultArray = $.grep(editors, function (n, i) {
+                return n.id === tabUniqueId;
+            }, true);
+
+            var editor = resultArray[selectedTab].instance;
+            var text = editor.getValue();
+            var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, fileName);
+        });
+
+
+        $("#aCompile").click(function (e) {
+            var selectedTab = $("#tabs").tabs('option', 'active');
+
+            var tabUniqueId = $(this).parent().attr('data-tab-id');
+            var resultArray = $.grep(editors, function (n, i) {
+                return n.id === tabUniqueId;
+            }, true);
+
+            var editor = resultArray[selectedTab].instance;
+            var formData = editor.getValue();
+            //*************************************************************
+            fetch('/proyecto2-compi1/analizarJS', {
+                method: 'POST',
+                body: JSON.stringify({ "entrada": formData }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        return response.text();
+                    } else {
+                        throw "Respuesta incorrecta del servidor"
+                    }
+                })
+                .then(responseText => {
+                    let respuesta = JSON.parse(responseText).results;
+                    alert(respuesta);
+                    document.querySelector("#txtHTML").innerHTML += "\n" + respuesta;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            //----------------------------------------------
+
+        });
+        //----
+        $("#importFile").css('opacity', '0');
+
+        var editors = [];   //Arreglo que contiene las pestañas (editores)
+        var contTabs = 0;   //Lleva el conteo de las pestañas abiertas
+        var Range = ace.require('ace/range').Range;
+        var init = false;
+
+        $(document).ready(function () {
+            // Inicializando pestañas
+            $('#tabs').tabs();
+            $('#tabs3').tabs();
+
+            // Lógica del botón de creación de pestañas
+            $('#aCreate').on('click', function () {
+                contTabs++;
+                addEditor("", "Tab " + contTabs);
+            });
+
+            // Logica del botón de cerrar pestañas
+            $('#tabs').on('click', '.close', function () {
+                var tabUniqueId = $(this).parent().attr('data-tab-id');
+
+                var resultArray = $.grep(editors, function (n, i) {
+                    return n.id === tabUniqueId;
+                }, true);
+
+                var editor = resultArray[0].instance;
+                editor.destroy();
+                $('#tabs').find('#panel_nav_' + tabUniqueId).remove();
+                $('#tabs').find('#panel_' + tabUniqueId).remove();
+
+            });
+
+            contTabs = contTabs + 1;
+            addEditor("", "Tab " + contTabs);
+
+            // Consola de Javascript
+            crearMenu2("<textarea readonly id=\"txtHTML\" class=\"text\"  style=\"background-color: black; overflow-y:scroll; width: 925%; height: 90%\" > </textarea>", "CONSOLA 2", "#tabs3");
+            var te = $('#tabs3');
+            te.tabs('option', 'active', 0);
+
+
+        });
+
+        //Lógica al abrir archivo y mostrar su contenido en un nuevo editor.
+        function showFile() {
+            var preview = document.getElementById('show-text');
+            var file = document.querySelector('input[type=file]').files[0];
+            var reader = new FileReader()
+
+            reader.onload = function (event) {
+                contTabs++;
+                addEditor(event.target.result, file.name);
+            }
+            reader.readAsText(file, "new file");
+        }
+
+        //Método para creación de nuevo editor en la página
+        function addEditor(text, tabName) {
+            var tabsElement = $('#tabs');
+            var tabsUlElement = tabsElement.find('ul');
+            var tabUniqueId = new Date().getTime() + Math.floor(Math.random() * 10000);
+            var newTabNavElement = $('<li id="panel_nav_' + tabUniqueId + '"><a href="#panel_' + tabUniqueId + '">' + tabName + '</a></li>');
+            tabsUlElement.append(newTabNavElement);
+
+            // Creación de panel que contendrá el editor
+            var newTabPanelElement = $('<div id="panel_' + tabUniqueId + '" data-tab-id="' + tabUniqueId + '"></div>');
+            tabsElement.append(newTabPanelElement);
+            tabsElement.tabs('refresh');
+
+            //Se da 'focus' a la nueva pestaña creada
+            var tabIndex = $('#tabs ul li').index($('#panel_nav_' + tabUniqueId));
+            tabsElement.tabs('option', 'active', tabIndex);
+
+            //Creación de nuevo editor
+            var newEditorElement = $('<div id="editor_' + tabUniqueId + '">// some code here</div>');
+            newTabPanelElement.append(newEditorElement);
+
+            //Inicialización del nuevo editor en la pestaña
+            var editor = ace.edit('editor_' + tabUniqueId);
+            editor.setTheme("ace/theme/eclipse");
+            editor.getSession().setMode("ace/mode/xml");
+            //setea el breakpoint en la línea seleccionada.
+            editor.on("guttermousedown", function (e) {
+                var target = e.domEvent.target;
+                if (target.className.indexOf("ace_gutter-cell") == -1)
+                    return;
+                if (!editor.isFocused())
+                    return;
+                if (e.clientX > 25 + target.getBoundingClientRect().left)
+                    return;
+
+                var breakpoints = e.editor.session.getBreakpoints(row, 0);  //se obtiene en que posiciones hay breakpoints.
+
+                var row = e.getDocumentPosition().row;
+                if (typeof breakpoints[row] == typeof undefined) {
+                    e.editor.session.setBreakpoint(row);                    //setea el breakpoint de la línea seleccionada
+                }
+                else {
+                    e.editor.session.clearBreakpoint(row);                  //remueve el breakpoint de la línea seleccionada
+                }
+
+                e.stop();
+            });
+
+            //Se establece el tamaño del panel
+            newTabPanelElement.width('400');
+            newTabPanelElement.height('200');//tama;o del fream gris
+
+            //Se establece el tamaño del editor
+            newEditorElement.width('200');//tama;o del editor
+            newEditorElement.height('200');//tama;o del editor
+
+            //Se agrega el texto al editor (si fue enviado como parámetro)
+            editor.setValue(text);
+
+            editor.resize();
+            editors.push({ id: tabUniqueId, instance: editor });
+
+            //Se agrega el botón de cerrado de pestaña/editor
+            var closeButton = $('<button class="close">x</button>');
+            newTabPanelElement.prepend(closeButton);
+        }
+
+        //Método para la creación de las pestañas de HTML y JSON
+        function crearMenu2(text, tabName, tabContainer) {
+            var tabsElement = $(tabContainer);
+            var tabsUlElement = tabsElement.find('ul');
+
+            var tabUniqueId = new Date().getTime() + Math.floor(Math.random() * 10000);
+            var newTabNavElement = $('<li id="panel_nav_' + tabUniqueId + '"><a href="#panel_' + tabUniqueId + '">' + tabName + '</a></li>');
+
+            tabsUlElement.append(newTabNavElement);
+            var newTabPanelElement = $('<div id="panel_' + tabUniqueId + '" data-tab-id2="' + tabUniqueId + '"></div>');
+            tabsElement.append(newTabPanelElement);
+
+            var newEditorElement = $('<div id="editor_' + tabUniqueId + '">' + text + '</div>');
+            nnewTabPanelElement.width('1200');
+            newTabPanelElement.height('200');
+
+            newEditorElement.width('150');
+            newEditorElement.height('150');
+
+            newTabPanelElement.append(newEditorElement);
+        }
+
+
+    </script>
+</body>
+
+</html>
