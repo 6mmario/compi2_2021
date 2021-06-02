@@ -40,7 +40,7 @@
     <div class="container">
         <div class="row">
             <div class="col-3" id="tabs3">
-                <h6>Javascript</h6>
+                <h6>Consola</h6>
             </div>
         </div>
     </div>
@@ -300,12 +300,12 @@
             });
 
             //Se establece el tamaño del panel
-            newTabPanelElement.width('400');
-            newTabPanelElement.height('200');//tama;o del fream gris
+            newTabPanelElement.width('910');
+            newTabPanelElement.height('350');//tama;o del fream gris
 
             //Se establece el tamaño del editor
-            newEditorElement.width('200');//tama;o del editor
-            newEditorElement.height('200');//tama;o del editor
+            newEditorElement.width('875');//tama;o del editor
+            newEditorElement.height('325');//tama;o del editor
 
             //Se agrega el texto al editor (si fue enviado como parámetro)
             editor.setValue(text);
@@ -331,11 +331,11 @@
             tabsElement.append(newTabPanelElement);
 
             var newEditorElement = $('<div id="editor_' + tabUniqueId + '">' + text + '</div>');
-            nnewTabPanelElement.width('1200');
-            newTabPanelElement.height('200');
+            newTabPanelElement.width('1000');
+            newTabPanelElement.height('100');
 
-            newEditorElement.width('150');
-            newEditorElement.height('150');
+            newEditorElement.width('100');
+            newEditorElement.height('100');
 
             newTabPanelElement.append(newEditorElement);
         }
