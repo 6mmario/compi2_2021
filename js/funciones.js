@@ -1,20 +1,62 @@
-function cargarArchivo() {
+function cargarArchivoXML() {
     document.getElementById('input').click();
     input.onchange = e => {
-        // getting a hold of the file reference
         var file = e.target.files[0];
-
-        // setting up the reader
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
 
-        // here we tell the reader what to do when it's done reading...
         reader.onload = readerEvent => {
-            var content = readerEvent.target.result; // this is the content!
-            document.getElementById("txtXML").value = content;
+            var content = readerEvent.target.result;
+            var editor = $('.CodeMirror')[0].CodeMirror;
+            editor.setValue(content);
+            editor.refresh();
         }
-
     }
-
     input.click();
+}
+
+function cargarArchivoXPath() {
+    document.getElementById('input').click();
+    input.onchange = e => {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+
+        reader.onload = readerEvent => {
+            var content = readerEvent.target.result;
+            document.getElementById("txtQuery").value = content;
+        }
+    }
+    input.click();
+}
+
+function guardarArchivoXML() {
+    var fileName = prompt("Nombre del archivo", "");
+    if (fileName == undefined) {
+        return;
+    }
+    var editor = $('.CodeMirror')[0].CodeMirror;
+    var text = editor.getValue();
+    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, fileName);
+}
+
+function guardarArchivoXPath() {
+    var fileName = prompt("Nombre del archivo", "");
+    if (fileName == undefined) {
+        return;
+    }
+    var text = document.getElementById("txtQuery").value;
+    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, fileName);
+}
+
+function limpiarXML(){
+    var editor = $('.CodeMirror')[0].CodeMirror;
+    editor.setValue("");
+    editor.refresh();
+}
+
+function limpiarXPath(){
+    document.getElementById("txtQuery").value = "";
 }
