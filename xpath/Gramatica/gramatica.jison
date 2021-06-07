@@ -18,9 +18,6 @@ BSL                                 "\\".
 %%
 
 
-"/*"                                this.begin('comment');
-<comment>"*/"                       this.popState();
-<comment>.                          /* skip comment content*/
 \s+                                 /* skip whitespace */
 
 "print"                     return 'PRINT';
@@ -31,11 +28,13 @@ BSL                                 "\\".
 "+"                         return 'PLUS';
 "-"                         return 'MINUS';
 "*"                         return 'TIMES';
-"/"                         return 'DIV';
+"//"                        return 'DSLASH';
+"/"                         return 'SLASH';
+"div"                       return 'DIV';
 ".."                        return 'DDOT';
 "."                         return 'DOT';
 "@"                         return 'AT';
-"%"                         return 'MOD';
+"mod"                       return 'MOD';
 
 "<="                        return 'LTE';
 ">="                        return 'GTE';
@@ -45,13 +44,14 @@ BSL                                 "\\".
 "=="                        return 'EQUAL';
 "!="                        return 'NEQUAL';
 
-"and"                        return 'AND';
+"and"                       return 'AND';
 "|"                         return 'SOR';
 "or"                        return 'OR';
-"not"                         return 'NOT';
+"not"                       return 'NOT';
 
 ","                         return 'COMA';
 ";"                         return 'SEMICOLON';
+"::"                        return 'AXE'
 "("                         return 'LPAREN';
 ")"                         return 'RPAREN';
 "["                         return 'LCOR';
@@ -62,10 +62,10 @@ BSL                                 "\\".
 (([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DOUBLELITERAL';
 [0-9]+                              return 'INTEGERLITERAL';
 
-[A-ZA-Z_][A-ZA-Z0-9_ÑÑ]*            return 'IDENTIFIER';
+[A-ZA-Z_][A-ZA-Z0-9_\-Ñ]*            return 'IDENTIFIER';
 
-{STRINGLITERAL}                     return 'STRINGLITERAL'
-{CHARLITERAL}                       return 'CHARLITERAL'
+{STRINGLITERAL}                     return 'STRINGLITERAL';
+{CHARLITERAL}                       return 'CHARLITERAL';
 
 //error lexico
 .                                   {
@@ -82,6 +82,8 @@ BSL                                 "\\".
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
+%left 'DSLASH', 'SLASH'
+%left 'AXE'
 %left 'OR'
 %left 'AND'
 %left 'EQUAL' 'ASIG' 'NEQUAL'
@@ -98,35 +100,32 @@ BSL                                 "\\".
 S               : consultas EOF
                 ;
 
-consultas       : consultas SOR root
-                | root
-                ;
-
-root            : DIV DIV nodos  
-                | DIV nodos
-                | nodos       
-                ;
-
-nodos           : expresion DIV DIV nodos
-                | expresion DIV nodos          
+consultas       : consultas SOR expresion
                 | expresion
-                ;
+                ;    
 
-expresion       : expresion AND expresion                          
+expresion       : DSLASH expresion %prec DSLASH  
+                | SLASH expresion  %prec SLASH  
+                | expresion DSLASH expresion
+                | expresion SLASH expresion
+                | expresion AXE expresion
+                | expresion AND expresion                          
                 | expresion OR expresion                         
-                | NOT expresion %prec NOT                       
-                | expresion ASIG expresion                    
-                | expresion NEQUAL expresion               
+                | NOT expresion %prec NOT     
+                | expresion ASIG expresion
+                | expresion NEQUAL expresion                              
                 | expresion GT expresion                      
                 | expresion GTE expresion                   
                 | expresion LT expresion                     
                 | expresion LTE expresion                 
-                | expresion MOD expresion                                           
+                | expresion MOD expresion        
+                | expresion DIV expresion                                     
                 | expresion TIMES expresion                           
                 | expresion PLUS expresion          
                 | expresion MINUS expresion                        
-                | MINUS expresion %prec UMINUS               
-                | LPAREN expresion RPAREN                     
+                | MINUS expresion %prec UMINUS   
+                | expresion TIMES        
+                | TIMES                       
                 | DOUBLELITERAL                                        
                 | INTEGERLITERAL                                        
                 | STRINGLITERAL     
@@ -135,18 +134,18 @@ expresion       : expresion AND expresion
                 | DOT nodo
                 | DDOT nodo   
                 | DOT
-                | DDOT    
-                | TIMES                     
+                | DDOT                       
                 ;
 
-nodo            : AT predicado
-                | predicado
+nodo            : AT TIMES
+                | AT predicado
+                | predicado                
                 ;
 
 predicado       : IDENTIFIER cors
                 | IDENTIFIER
                 ;
 
-cors            : cors LCOR root RCOR                
-                | LCOR root RCOR
+cors            : cors LCOR expresion RCOR                
+                | LCOR expresion RCOR
                 ;
