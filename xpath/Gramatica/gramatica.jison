@@ -3,15 +3,15 @@
 
 %options case-insensitive
 
-escapechar                          [\'\"\\bfnrtv]
-escape                              \\{escapechar}
-acceptedcharsdouble                 [^\"\\]+
-stringdouble                        {escape}|{acceptedcharsdouble}
-stringliteral                       \"{stringdouble}*\"
+ESCAPECHAR                          [\'\"\\bfnrtv]
+ESCAPE                              \\{ESCAPECHAR}
+ACCEPTEDCHARSDOUBLE                 [^\"\\]+
+STRINGDOUBLE                        {ESCAPE}|{ACCEPTEDCHARSDOUBLE}
+STRINGLITERAL                       \"{STRINGDOUBLE}*\"
 
-acceptedcharssingle                 [^\'\\]
-stringsingle                        {escape}|{acceptedcharssingle}
-charliteral                         \'{stringsingle}\'
+ACCEPTEDCHARSSINGLE                 [^\'\\]
+STRINGSINGLE                        {ESCAPE}|{ACCEPTEDCHARSSINGLE}
+CHARLITERAL                         \'{STRINGSINGLE}\'
 
 BSL                                 "\\".
 %s                                  comment
@@ -23,51 +23,49 @@ BSL                                 "\\".
 <comment>.                          /* skip comment content*/
 \s+                                 /* skip whitespace */
 
-"print"                     return 'print';
-"null"                      return 'null';
-"true"                      return 'true';
-"false"                     return 'false';
+"print"                     return 'PRINT';
+"null"                      return 'NULL';
+"true"                      return 'TRUE';
+"false"                     return 'FALSE';
 
-"+"                         return 'plus';
-"-"                         return 'minus';
-"*"                         return 'times';
-"/"                         return 'div';
-"//"                        return 'ddiv';
-"."                         return 'dot';
-".."                        return 'ddot';
-"@"                         return 'at';
-"%"                         return 'mod';
+"+"                         return 'PLUS';
+"-"                         return 'MINUS';
+"*"                         return 'TIMES';
+"/"                         return 'DIV';
+"."                         return 'DOT';
+".."                        return 'DDOT';
+"@"                         return 'AT';
+"%"                         return 'MOD';
 
-"<="                        return 'lte';
-">="                        return 'gte';
-"<"                         return 'lt';
-">"                         return 'gt';
-"="                         return 'asig';
-"=="                        return 'equal';
-"!="                        return 'nequal';
+"<="                        return 'LTE';
+">="                        return 'GTE';
+"<"                         return 'LT';
+">"                         return 'GT';
+"="                         return 'ASIG';
+"=="                        return 'EQUAL';
+"!="                        return 'NEQUAL';
 
-"&&"                        return 'and';
-"||"                        return 'or';
-"!"                         return 'not';
+"&&"                        return 'AND';
+"|"                         return 'SOR';
+"||"                        return 'OR';
+"!"                         return 'NOT';
 
-";"                         return 'semicolon';
-"("                         return 'lparen';
-")"                         return 'rparen';
-"["                         return 'lcor';
-"]"                         return 'rcor';
+","                         return 'COMA';
+";"                         return 'SEMICOLON';
+"("                         return 'LPAREN';
+")"                         return 'RPAREN';
+"["                         return 'LCOR';
+"]"                         return 'RCOR';
 
-"&&"                        return 'and';
-"||"                        return 'or';
-"!"                         return 'not';
 
 /* Number literals */
-(([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DoubleLiteral';
-[0-9]+                              return 'IntegerLiteral';
+(([0-9]+"."[0-9]*)|("."[0-9]+))     return 'DOUBLELITERAL';
+[0-9]+                              return 'INTEGERLITERAL';
 
-[a-zA-Z_][a-zA-Z0-9_ñÑ]*            return 'identifier';
+[A-ZA-Z_][A-ZA-Z0-9_ÑÑ]*            return 'IDENTIFIER';
 
-{stringliteral}                     return 'StringLiteral'
-{charliteral}                       return 'CharLiteral'
+{STRINGLITERAL}                     return 'STRINGLITERAL'
+{CHARLITERAL}                       return 'CHARLITERAL'
 
 //error lexico
 .                                   {
@@ -84,37 +82,66 @@ BSL                                 "\\".
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
-%left 'or'
-%left 'and'
-%left 'lt' 'lte' 'gt' 'gte' 'equal' 'nequal'
-%left 'plus' 'minus'
-%left 'times' 'div' 'mod'
-%left 'pow'
-%left 'not'
-%left UMINUS
+%left 'OR'
+%left 'AND'
+%left 'EQUAL' 'ASIG' 'NEQUAL'
+%nonassoc 'LT' 'GT' 'LTE' 'GTE'
+%left 'PLUS' 'MINUS' 'TIMES' 'MOD'
+%left 'MUL' 'DIV'
+%left UMINUS 'NOT'
+%left 'LCOR' 'RCOR'
 
-%left 'lparen' 'rparen'
-
-
-// DEFINIMOS PRODUCCIÓN INICIAL
-%start START
+%start S
 
 %%
 
+S               : sentencias EOF
+                ;
 
-/* Definición de la gramática */
-START           :   SELECCION EOF
+sentencias      : sentencias SOR root
+                | root
                 ;
-SELECCION       :   SELECCION LISTA_NODO
-                |   LISTA_NODO
+
+root            : nodos
+                | DIV nodos
+                | DIV DIV nodos
                 ;
-LISTA_NODO      :   identifier
-                    | div
-                    | ddiv
-                    | dot
-                    | ddot
-                    | at
-                    | PREDICADO
+
+nodos           : nodo DIV nodos
+                | nodo DIV DIV nodos
+                | nodo
                 ;
-PREDICADO       : identifier lcor rcor
+
+nodo            : DOT predicado
+                | DDOT predicado
+                | AT predicado
+                | predicado
+                ;
+
+predicado       : IDENTIFIER LCOR expresion RCOR
+                | IDENTIFIER
+                ;
+
+expresion       : expresion AND expresion                          
+                | expresion OR expresion                         
+                | NOT expresion %prec NOT                       
+                | expresion ASIG expresion                    
+                | expresion NEQUAL expresion               
+                | expresion GT expresion                      
+                | expresion GTE expresion                   
+                | expresion LT expresion                     
+                | expresion LTE expresion                 
+                | expresion MOD expresion                                           
+                | expresion TIMES expresion                   
+                | expresion DIV expresion               
+                | expresion PLUS expresion          
+                | expresion MINUS expresion                        
+                | MINUS expresion %prec UMINUS               
+                | LPAREN expresion RPAREN        
+                | AT IDENTIFIER                
+                | DOUBLELITERAL                                        
+                | INTEGERLITERAL                                        
+                | STRINGLITERAL     
+                | CHARLITERAL                                     
+                | IDENTIFIER                                            
                 ;
