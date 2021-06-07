@@ -32,8 +32,8 @@ BSL                                 "\\".
 "-"                         return 'MINUS';
 "*"                         return 'TIMES';
 "/"                         return 'DIV';
-"."                         return 'DOT';
 ".."                        return 'DDOT';
+"."                         return 'DOT';
 "@"                         return 'AT';
 "%"                         return 'MOD';
 
@@ -45,10 +45,10 @@ BSL                                 "\\".
 "=="                        return 'EQUAL';
 "!="                        return 'NEQUAL';
 
-"&&"                        return 'AND';
+"and"                        return 'AND';
 "|"                         return 'SOR';
-"||"                        return 'OR';
-"!"                         return 'NOT';
+"or"                        return 'OR';
+"not"                         return 'NOT';
 
 ","                         return 'COMA';
 ";"                         return 'SEMICOLON';
@@ -95,31 +95,21 @@ BSL                                 "\\".
 
 %%
 
-S               : sentencias EOF
+S               : consultas EOF
                 ;
 
-sentencias      : sentencias SOR root
+consultas       : consultas SOR root
                 | root
                 ;
 
-root            : nodos
+root            : DIV DIV nodos  
                 | DIV nodos
-                | DIV DIV nodos
+                | nodos       
                 ;
 
-nodos           : nodo DIV nodos
-                | nodo DIV DIV nodos
-                | nodo
-                ;
-
-nodo            : DOT predicado
-                | DDOT predicado
-                | AT predicado
-                | predicado
-                ;
-
-predicado       : IDENTIFIER LCOR expresion RCOR
-                | IDENTIFIER
+nodos           : expresion DIV DIV nodos
+                | expresion DIV nodos          
+                | expresion
                 ;
 
 expresion       : expresion AND expresion                          
@@ -132,16 +122,31 @@ expresion       : expresion AND expresion
                 | expresion LT expresion                     
                 | expresion LTE expresion                 
                 | expresion MOD expresion                                           
-                | expresion TIMES expresion                   
-                | expresion DIV expresion               
+                | expresion TIMES expresion                           
                 | expresion PLUS expresion          
                 | expresion MINUS expresion                        
                 | MINUS expresion %prec UMINUS               
-                | LPAREN expresion RPAREN        
-                | AT IDENTIFIER                
+                | LPAREN expresion RPAREN                     
                 | DOUBLELITERAL                                        
                 | INTEGERLITERAL                                        
                 | STRINGLITERAL     
-                | CHARLITERAL                                     
-                | IDENTIFIER                                            
+                | CHARLITERAL        
+                | nodo 
+                | DOT nodo
+                | DDOT nodo   
+                | DOT
+                | DDOT    
+                | TIMES                     
+                ;
+
+nodo            : AT predicado
+                | predicado
+                ;
+
+predicado       : IDENTIFIER cors
+                | IDENTIFIER
+                ;
+
+cors            : cors LCOR root RCOR                
+                | LCOR root RCOR
                 ;
