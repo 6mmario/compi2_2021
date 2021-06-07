@@ -143,8 +143,17 @@ nodo            : AT TIMES
                 ;
 
 predicado       : IDENTIFIER cors
+                | IDENTIFIER func
                 | IDENTIFIER
                 ;
+
+func            : LPAREN args PAREN
+                | LPAREN RPAREN
+                ;               
+
+args            : args COMA expresion
+                | expresion
+                ;                 
 
 cors            : cors LCOR expresion RCOR                
                 | LCOR expresion RCOR
