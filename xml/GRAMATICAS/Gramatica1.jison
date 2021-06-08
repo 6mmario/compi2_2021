@@ -63,8 +63,8 @@ strings   [^ \n][^<&]+
 
 //SECCION DE IMPORTS
 %{
-    const {Elemento} = require("../CLASES/Elemento");
-    const {Atributo} = require("../CLASES/Atributo");
+    const {Elemento} = require("../../CLASES/Elemento");
+    const {Atributo} = require("../../CLASES/Atributo");
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
