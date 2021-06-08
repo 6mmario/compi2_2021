@@ -17,8 +17,10 @@ Para crear(si no existe) el archivo 'tsconfig.json' Utilizar el comando 'tsc --i
 
 ## JAVASCRIPT
 #### Configuraciones de javascript 
-Crear el package.json ejecutando el comando npm init. 
-* Agregar a scripts el comando build y start, para convertir TSC -> JS, construir la gramatica y ejecutar node index.js.
+Crear el **package.json** ejecutando el comando npm init. (Este archivo es fundamental para automatizar la construccion) 
+* Agregar a scripts el comando build, gramatica, start. Para convertir TSC -> JS, construir la gramatica y ejecutar node index.js.
+* Para convertir el archivo .jison a .js utlizar el comando -> npm run gramatica adentro de xml/
+* Para compilar todo el codigo TS y crear la carpeta /dist, utilizar el comando npm run build adentro del /xml
 * Para importar un archivo .js adentro de un archivo .TS utilizar el siguiente comando "npm i --save-dev @types/node" -> actualiza el package.json 
 
 ## Licencia
