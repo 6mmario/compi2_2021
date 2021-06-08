@@ -60,3 +60,9 @@ function limpiarXML(){
 function limpiarXPath(){
     document.getElementById("txtQuery").value = "";
 }
+
+function analizarXPath(){
+    var entrada = document.getElementById("txtQuery").value;
+    console.log(entrada);
+    gramatica.parse(entrada);
+}
