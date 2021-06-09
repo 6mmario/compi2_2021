@@ -1,10 +1,15 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 //import {Atributo } from '../CLASES/Atributo';
 const analizador = require('./GRAMATICAS/Gramatica1');
 console.log("Esta funcionando todo");
-analizador.parse(`
+//const ambito:Ambito = new Ambito(null);
+let hash; // Tabla hash, que representa la tabla de simbolos interna del ambito
+hash = {};
+hash['hola'] = 'hola';
+const elementos = analizador.parse(`
 <?xml version="1.0" encoding="UTF-8"?>
-<bookstore>
+<bookstore libreria="Usac" ciudad="Guatemala">
   <book category="children">
           hola    &amp; mundo
     <title>   !ABC ABC</title>
@@ -24,3 +29,7 @@ analizador.parse(`
   </book2>
 </bookstore>
 `);
+//console.log(typeof elementos);
+let elementosCast = elementos;
+const ambitoGlobal = elementosCast.construirTablaSimbolos(null);
+console.log(ambitoGlobal);

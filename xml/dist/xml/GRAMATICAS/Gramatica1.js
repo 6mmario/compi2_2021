@@ -89,7 +89,7 @@ var Gramatica1 = (function () {
                     return this.$;
                     break;
                 case 2:
-                    this.$ = [$$[$0]];
+                    this.$ = $$[$0];
                     console.log($$[$0]);
                     break;
                 case 3:
