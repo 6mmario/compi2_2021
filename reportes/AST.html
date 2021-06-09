@@ -1,68 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
-<HEAD>
-	<TITLE>REPORTE AST</TITLE>
-	<style>
-		body {
-			padding: 20px;
-		}
+<head>
+	<link rel="stylesheet" href="style.css">
 
-		h2 {
-			color: #000;
-			font-family: Calibri;
-		}
-	</style>
-</HEAD>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.3.15/cytoscape.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			var cy = cytoscape({
+				container: document.getElementById('cy'),
+				style: [
+					{
+						selector: 'node',
+						css: {
+							width: 50,
+							height: 50,
+							'background-color': '#61bffc',
+							content: 'data(id)'
+						}
 
-<body>
-
-
-
-	<div class="articulo">
-		<H3>Universidad de San Carlos de Guatemala<BR>Facultad de Ingenieria<BR>Escuela de Ciencias y Sistemas<BR>Mario
-			Morales<BR>201213283<BR></H3>
-		<CENTER>
-			<H2>PROYECTO 2 <BR>REPORTE AST</H2>
-		</CENTER>
-	</div>
-
-	<div id="graph" style="text-align: center;"></div>
-	<style>
-		.container {
-			display: inline-block;
-			margin-left: 15%;
-		}
-	</style>
-
-
-	<script>
-
-		window.onload = function () {
-
-			fetch('/proyecto2-compi1/generate')
-				.then(response => {
-					if (response.status == 200) {
-						return response.text();
-					} else {
-						throw "Respuesta incorrecta del servidor"
 					}
-				})
-				.then(responseText => {
-					let users = JSON.parse(responseText).results;
-					d3.select("#graph").graphviz()
-						.renderDot(users);
-				})
-				.catch(err => {
-					console.log(err);
-				});
-		}
+				],
+				elements: {
+
+
+					nodes: [
+						{ data: { id: 'A' } },
+						{ data: { id: 'B' } },
+						{ data: { id: 'C' } },
+						{ data: { id: 'D' } },
+						{ data: { id: 'E' } },
+						{ data: { id: 'F' } },
+						{ data: { id: 'G' } },
+						{ data: { id: 'H' } },
+						{ data: { id: 'J' } },
+						{ data: { id: 'K' } },
+						{ data: { id: 'L' } },
+						{ data: { id: 'M' } }
+
+					],
+					edges: [
+						{ data: { id: 'e1', source: 'A', target: 'B' } },
+						{ data: { id: 'e2', source: 'A', target: 'C' } },
+						{ data: { id: 'e3', source: 'B', target: 'D' } },
+						{ data: { id: 'e4', source: 'B', target: 'E' } },
+						{ data: { id: 'e5', source: 'C', target: 'F' } },
+						{ data: { id: 'e6', source: 'C', target: 'G' } },
+						{ data: { id: 'e7', source: 'D', target: 'H' } },
+						{ data: { id: 'e8', source: 'D', target: 'I' } },
+						{ data: { id: 'e9', source: 'E', target: 'J' } },
+						{ data: { id: 'e10', source: 'F', target: 'K' } },
+						{ data: { id: 'e11', source: 'F', target: 'L' } },
+						{ data: { id: 'e12', source: 'G', target: 'M' } }
+					]
+				},
+				layout: {
+					name: 'breadthfirst',
+					directed: true,
+					padding: 10,
+					/* color: "#ffff00",*/
+					fit: true
+				}
+			});
+		});
 
 	</script>
+</head>
 
-	<script src="//d3js.org/d3.v5.min.js"></script>
-	<script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
-	<script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+<body>
+	<h1>Cytoscape.js Simple Demo</h1>
+	<div id="cy"></div>
 </body>
 
 </html>
