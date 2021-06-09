@@ -2,12 +2,19 @@
 
 //import {Atributo } from '../CLASES/Atributo';
 const analizador = require('./GRAMATICAS/Gramatica1');
+import { Ambito} from '../CLASES/Ambito';
+import { Elemento } from '../CLASES/Elemento';
 
 console.log("Esta funcionando todo");
+//const ambito:Ambito = new Ambito(null);
+let hash:{ [id:string] : string }; // Tabla hash, que representa la tabla de simbolos interna del ambito
+hash = {};
+hash['hola'] = 'hola';
 
-analizador.parse(`
+
+const elementos = analizador.parse(`
 <?xml version="1.0" encoding="UTF-8"?>
-<bookstore>
+<bookstore libreria="Usac" ciudad="Guatemala">
   <book category="children">
           hola    &amp; mundo
     <title>   !ABC ABC</title>
@@ -27,3 +34,8 @@ analizador.parse(`
   </book2>
 </bookstore>
 `);
+//console.log(typeof elementos);
+let elementoRaiz:Elemento = <Elemento>elementos;
+
+const ambitoGlobal:Ambito = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+console.log(ambitoGlobal);

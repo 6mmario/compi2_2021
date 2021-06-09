@@ -87,7 +87,7 @@ case 1:
  this.$ = $$[$0-1]; /*console.log($$[$0-1], $$[$0]);*/ return this.$; 
 break;
 case 2:
-this.$ = [$$[$0]]; console.log($$[$0]);
+this.$ = $$[$0]; console.log($$[$0]);
 break;
 case 3:
  
