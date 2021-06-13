@@ -63,8 +63,7 @@ strings   [^ \n][^<&]+
 
 //SECCION DE IMPORTS
 %{
-    const {Elemento} = require("../../CLASES/Elemento");
-    const {Atributo} = require("../../CLASES/Atributo");
+
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
@@ -78,7 +77,7 @@ strings   [^ \n][^<&]+
 START: TAGS EOF         { $$ = $1; /*console.log($1, $2);*/ return $$; } //strings PREDEFINIDOS Tag_ID
 ;
    
-TAGS: PROLOG TAG               {$$ = $2; console.log($2);} // objetos tipo TAG ($$ = clase Elemento)
+TAGS: PROLOG TAG               {$$ = $2; /*console.log($2);*/} // objetos tipo TAG ($$ = clase Elemento)
 ;
 
 PROLOG: LT qm Tag_ID Tag_ID Equal Alphanumeric Tag_ID Equal Alphanumeric qm GT { 
