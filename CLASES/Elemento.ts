@@ -42,4 +42,5 @@ export class Elemento{
         return this.ambito; // Podria retornar un ambito que no contiene ni Etiquetas ni Atributos..
     }
 
+    
 }

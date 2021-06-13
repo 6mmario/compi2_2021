@@ -1,7 +1,8 @@
-
-
 export enum Tipo{
-
     ATRIBUTO,
-    ELEMENTO
+    ELEMENTO,
+    STRING, 
+    INT,
+    DOUBLE,
+    NULL
 }
