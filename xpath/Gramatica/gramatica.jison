@@ -115,13 +115,15 @@ consultas       : consultas SOR expresion {
                 }
                 ;
 
-expresion       : DSLASH expresion %prec DSLASH {
+expresion       : DSLASH expresion %prec DSLASH
+                {
                     var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
                     padre.hijos.push(new nodo_ast("DSLASH",$1,this._$.first_line, @1.last_column));
                     padre.hijos.push($2);
                     $$ = padre;
                 }
-                | SLASH expresion  %prec SLASH {
+                | SLASH expresion  %prec SLASH 
+                {
                     var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
                     padre.hijos.push(new nodo_ast("SLASH",$1,this._$.first_line, @1.last_column));
                     padre.hijos.push($2);
