@@ -77,7 +77,7 @@ BSL                                 "\\".
 /lex
 
 %{
-
+    const nodo_ast = require('../NODOS/nodo_ast');
 %}
 
 %left 'DSLASH', 'SLASH'
@@ -95,65 +95,288 @@ BSL                                 "\\".
 
 %%
 
-S               : consultas EOF { $$ = $1; return $$; }
+S               : consultas EOF {
+                    var padre = new nodo_ast("CST","",this._$.first_line, this._$.first_column);
+                    padre.hijos = $1;
+                    var resultado = {cst: padre};
+                        return resultado;
+                    }
+                }
+                ;
+consultas       : consultas SOR expresion {
+                    $1.push(new nodo_ast("SOR",$2,this._$.first_line, @1.last_column));
+                    $1.push($3);
+                    $$= $1;
+                }
+                | expresion {
+                    var l_exp = new Array();
+                    l_exp.push($1);
+                    $$ = l_exp;
+                }
                 ;
 
-consultas       : consultas SOR expresion 
-                | expresion  { $$ = $1; }
-                ;    
-
-expresion       : DSLASH expresion %prec DSLASH
-                | SLASH expresion  %prec SLASH  
-                | expresion DSLASH expresion
-                | expresion SLASH expresion
-                | expresion AXE expresion
-                | expresion AND expresion                          
-                | expresion OR expresion                         
-                | NOT expresion %prec NOT     
-                | expresion ASIG expresion
-                | expresion NEQUAL expresion                              
-                | expresion GT expresion                      
-                | expresion GTE expresion                   
-                | expresion LT expresion                     
-                | expresion LTE expresion                 
-                | expresion MOD expresion           { $$ = new Operacion($1,$3,Operador.MOD, @1.first_line, @1.first_column); }                           
-                | expresion DIV expresion           { $$ = new Operacion($1,$3,Operador.DIVISION, @1.first_line, @1.first_column); }                           
-                | expresion TIMES expresion         { $$ = new Operacion($1,$3,Operador.MULTIPLICACION, @1.first_line, @1.first_column); }                      
-                | expresion PLUS expresion          { $$ = new Operacion($1,$3,Operador.SUMA, @1.first_line, @1.first_column); }        
-                | expresion MINUS expresion         { $$ = new Operacion($1,$3,Operador.RESTA, @1.first_line, @1.first_column); }
-                | LPAREN expresion RPAREN           { $$ = $2 }                   
-                | MINUS expresion %prec UMINUS      { $$ = new Operacion($2,$2,Operador.MENOS_UNARIO, @1.first_line, @1.first_column); }
-                | expresion TIMES        
-                | TIMES                       
-                | DOUBLELITERAL                                        
-                | INTEGERLITERAL                                        
-                | STRINGLITERAL     
-                | CHARLITERAL        
-                | nodo                              { $$ = $1 }       
-                | DOT nodo
-                | DDOT nodo   
-                | DOT
-                | DDOT                       
+expresion       : DSLASH expresion %prec DSLASH {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("DSLASH",$1,this._$.first_line, @1.last_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | SLASH expresion  %prec SLASH {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("SLASH",$1,this._$.first_line, @1.last_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | expresion DSLASH expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("DSLASH",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion SLASH expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("SLASH",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion AXE expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("AXE",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion AND expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("AND",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion OR expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("OR",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | NOT expresion %prec NOT {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("NOT",$1,this._$.first_line, @1.last_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | expresion ASIG expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("ASIG",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion NEQUAL expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("NEQUAL",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion GT expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("GT",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion GTE expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("GTE",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion LT expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("LT",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion LTE expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("LTE",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion MOD expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("MOD",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion DIV expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("DIV",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion TIMES expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("TIMES",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion PLUS expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("PLUS",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | expresion MINUS expresion {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("MINUS",$2,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($3);
+                    $$ = padre;
+                }
+                | LPAREN expresion RPAREN {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LPAREN",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    padre.hijos.push(new nodo_ast("RPAREN",$3,this._$.first_line, this._$.first_column));
+                    $$ = padre;
+                }
+                | MINUS expresion %prec UMINUS {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("MINUS",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | expresion TIMES {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($1);
+                    padre.hijos.push(new nodo_ast("TIMES",$2,this._$.first_line, this._$.first_column));
+                    $$ = padre;
+                }
+                | TIMES {
+                    $$ = new nodo_ast("TIMES",$1,this._$.first_line, this._$.first_column);
+                }
+                | DOUBLELITERAL {
+                    $$ = new nodo_ast("DOUBLELITERAL",$1,this._$.first_line, this._$.first_column);
+                }
+                | INTEGERLITERAL {
+                    $$ = new nodo_ast("INTEGERLITERAL",$1,this._$.first_line, this._$.first_column);
+                }
+                | STRINGLITERAL {
+                    $$ = new nodo_ast("STRINGLITERAL",$1,this._$.first_line, this._$.first_column);
+                }
+                | CHARLITERAL {
+                    $$ = new nodo_ast("CHARLITERAL",$1,this._$.first_line, this._$.first_column);
+                }
+                | nodo {
+                    $$ = $1;
+                }
+                | DOT nodo {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("DOT",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | DDOT nodo {
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("DDOT",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | DOT {
+                    $$ = new nodo_ast("DOT",$1,this._$.first_line, this._$.first_column);
+                }
+                | DDOT {
+                    $$ = new nodo_ast("DDOT",$1,this._$.first_line, this._$.first_column);
+                }
                 ;
 
-nodo            : AT TIMES
-                | AT predicado
-                | predicado                         { $$ = $1 }                      
+nodo            : AT TIMES {
+                    var padre = new nodo_ast("NODO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("AT",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push(new nodo_ast("TIMES",$2,this._$.first_line, this._$.first_column));
+                    $$ = padre;
+                }
+                | AT predicado {
+                    var padre = new nodo_ast("NODO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("AT",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    $$ = padre
+                }
+                | predicado {
+                    $$ = $1;
+                }
                 ;
 
-predicado       : IDENTIFIER cors
-                | IDENTIFIER func
-                | IDENTIFIER { $$ = new Operacion($1,$1,Operador.NODO,@1.first_line,@1.first_column); }
+predicado       : IDENTIFIER cors {
+                    var padre = new nodo_ast("PREDICADO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("IDENTIFIER",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | IDENTIFIER func {
+                    var padre = new nodo_ast("PREDICADO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("IDENTIFIER",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    $$ = padre;
+                }
+                | IDENTIFIER {
+                    $$ = new nodo_ast("IDENTIFIER",$1,this._$.first_line, this._$.first_column);
+                }
                 ;
 
-func            : LPAREN args PAREN
-                | LPAREN RPAREN
-                ;               
+func            : LPAREN args PAREN {
+                    var padre = new nodo_ast("FUNC","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LPAREN",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    padre.hijos.push(new nodo_ast("RPAREN",$3,this._$.first_line, this._$.first_column));
+                    $$ = padre;
+                }
+                | LPAREN RPAREN {
+                    var padre = new nodo_ast("FUNC","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LPAREN",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push(new nodo_ast("RPAREN",$2,this._$.first_line, this._$.first_column));
+                    $$ = padre;
+                }
+                ;
 
-args            : args COMA expresion
-                | expresion
-                ;                 
+args            : args COMA expresion {
+                    $1.push(new nodo_ast("COMA",$2,this._$.first_line, this._$.first_column)); 
+                    $1.push($3);
+                    $$= $1;
+                }
+                | expresion {
+                    var a = new Array();
+                    a.push($1);
+                    $$ = a;
+                }
+                ;
 
-cors            : cors LCOR expresion RCOR                
-                | LCOR expresion RCOR
+cors            : cors LCOR expresion RCOR {
+                    var padre = new nodo_ast("CORS","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LCORS",$2,this._$.first_line, this._$.first_column));
+                    var l_exp = new Array();
+                    l_exp.push($3)
+                    padre.hijos.push(new nodo_ast("RORS",$4,this._$.first_line, this._$.first_column));
+                    $1.push(padre);
+                    $$ = $1;
+                }
+                | LCOR expresion RCOR {
+                    var padre = new nodo_ast("CORS","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LCORS",$1,this._$.first_line, this._$.first_column));
+                    padre.hijos.push($2);
+                    padre.hijos.push(new nodo_ast("RORS",$3,this._$.first_line, this._$.first_column));
+                    $$ = padre;
+                }
                 ;

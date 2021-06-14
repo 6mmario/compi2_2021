@@ -84,37 +84,355 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
- this.$ = $$[$0-1]; return this.$; 
+
+                    var padre = new nodo_ast("CST","",this._$.first_line, this._$.first_column);
+                    padre.hijos = $$[$0-1];
+                    var resultado = {cst: padre};
+                        return resultado;
+                    
+break;
+case 2:
+
+                    $$[$0-2].push(new nodo_ast("SOR",$$[$0-1],this._$.first_line, _$[$0-2].last_column));
+                    $$[$0-2].push($$[$0]);
+                    this.$= $$[$0-2];
+                
 break;
 case 3:
- this.$ = $$[$0]; 
+
+                    var l_exp = new Array();
+                    l_exp.push($$[$0]);
+                    this.$ = l_exp;
+                
+break;
+case 4:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("DSLASH",$$[$0-1],this._$.first_line, _$[$0-1].last_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 5:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("SLASH",$$[$0-1],this._$.first_line, _$[$0-1].last_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 6:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("DSLASH",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 7:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("SLASH",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 8:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("AXE",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 9:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("AND",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 10:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("OR",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 11:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("NOT",$$[$0-1],this._$.first_line, _$[$0-1].last_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 12:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("ASIG",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 13:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("NEQUAL",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 14:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("GT",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 15:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("GTE",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 16:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("LT",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 17:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("LTE",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 18:
- this.$ = new Operacion($$[$0-2],$$[$0],Operador.MOD, _$[$0-2].first_line, _$[$0-2].first_column); 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("MOD",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 19:
- this.$ = new Operacion($$[$0-2],$$[$0],Operador.DIVISION, _$[$0-2].first_line, _$[$0-2].first_column); 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("DIV",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 20:
- this.$ = new Operacion($$[$0-2],$$[$0],Operador.MULTIPLICACION, _$[$0-2].first_line, _$[$0-2].first_column); 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("TIMES",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 21:
- this.$ = new Operacion($$[$0-2],$$[$0],Operador.SUMA, _$[$0-2].first_line, _$[$0-2].first_column); 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("PLUS",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 22:
- this.$ = new Operacion($$[$0-2],$$[$0],Operador.RESTA, _$[$0-2].first_line, _$[$0-2].first_column); 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-2]);
+                    padre.hijos.push(new nodo_ast("MINUS",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 23:
- this.$ = $$[$0-1] 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LPAREN",$$[$0-2],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0-1]);
+                    padre.hijos.push(new nodo_ast("RPAREN",$$[$0],this._$.first_line, this._$.first_column));
+                    this.$ = padre;
+                
 break;
 case 24:
- this.$ = new Operacion($$[$0],$$[$0],Operador.MENOS_UNARIO, _$[$0-1].first_line, _$[$0-1].first_column); 
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("MINUS",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 25:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push($$[$0-1]);
+                    padre.hijos.push(new nodo_ast("TIMES",$$[$0],this._$.first_line, this._$.first_column));
+                    this.$ = padre;
+                
+break;
+case 26:
+
+                    this.$ = new nodo_ast("TIMES",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 27:
+
+                    this.$ = new nodo_ast("DOUBLELITERAL",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 28:
+
+                    this.$ = new nodo_ast("INTEGERLITERAL",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 29:
+
+                    this.$ = new nodo_ast("STRINGLITERAL",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 30:
+
+                    this.$ = new nodo_ast("CHARLITERAL",$$[$0],this._$.first_line, this._$.first_column);
+                
 break;
 case 31: case 38:
- this.$ = $$[$0] 
+
+                    this.$ = $$[$0];
+                
+break;
+case 32:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("DOT",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 33:
+
+                    var padre = new nodo_ast("EXP","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("DDOT",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
+break;
+case 34:
+
+                    this.$ = new nodo_ast("DOT",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 35:
+
+                    this.$ = new nodo_ast("DDOT",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 36:
+
+                    var padre = new nodo_ast("NODO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("AT",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push(new nodo_ast("TIMES",$$[$0],this._$.first_line, this._$.first_column));
+                    this.$ = padre;
+                
+break;
+case 37:
+
+                    var padre = new nodo_ast("NODO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("AT",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre
+                
+break;
+case 39: case 40:
+
+                    var padre = new nodo_ast("PREDICADO","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("IDENTIFIER",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0]);
+                    this.$ = padre;
+                
 break;
 case 41:
- this.$ = new Operacion($$[$0],$$[$0],Operador.NODO,_$[$0].first_line,_$[$0].first_column); 
+
+                    this.$ = new nodo_ast("IDENTIFIER",$$[$0],this._$.first_line, this._$.first_column);
+                
+break;
+case 42:
+
+                    var padre = new nodo_ast("FUNC","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LPAREN",$$[$0-2],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0-1]);
+                    padre.hijos.push(new nodo_ast("RPAREN",$$[$0],this._$.first_line, this._$.first_column));
+                    this.$ = padre;
+                
+break;
+case 43:
+
+                    var padre = new nodo_ast("FUNC","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LPAREN",$$[$0-1],this._$.first_line, this._$.first_column));
+                    padre.hijos.push(new nodo_ast("RPAREN",$$[$0],this._$.first_line, this._$.first_column));
+                    this.$ = padre;
+                
+break;
+case 44:
+
+                    $$[$0-2].push(new nodo_ast("COMA",$$[$0-1],this._$.first_line, this._$.first_column)); 
+                    $$[$0-2].push($$[$0]);
+                    this.$= $$[$0-2];
+                
+break;
+case 45:
+
+                    var a = new Array();
+                    a.push($$[$0]);
+                    this.$ = a;
+                
+break;
+case 46:
+
+                    var padre = new nodo_ast("CORS","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LCORS",$$[$0-2],this._$.first_line, this._$.first_column));
+                    var l_exp = new Array();
+                    l_exp.push($$[$0-1])
+                    padre.hijos.push(new nodo_ast("RORS",$$[$0],this._$.first_line, this._$.first_column));
+                    $$[$0-3].push(padre);
+                    this.$ = $$[$0-3];
+                
+break;
+case 47:
+
+                    var padre = new nodo_ast("CORS","",this._$.first_line, this._$.first_column);
+                    padre.hijos.push(new nodo_ast("LCORS",$$[$0-2],this._$.first_line, this._$.first_column));
+                    padre.hijos.push($$[$0-1]);
+                    padre.hijos.push(new nodo_ast("RORS",$$[$0],this._$.first_line, this._$.first_column));
+                    this.$ = padre;
+                
 break;
 }
 },
@@ -267,7 +585,7 @@ parse: function parse(input) {
     return true;
 }};
 
-
+    const nodo_ast = require('../NODOS/nodo_ast');
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
 var lexer = ({
