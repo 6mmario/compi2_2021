@@ -106,7 +106,7 @@ nodos           : DSLASH expresion %prec DSLASH
                 | SLASH expresion  %prec SLASH  
                 | expresion DSLASH expresion
                 | expresion SLASH expresion
-                | expresion
+                | expresion { $$ = $1; }
                 ;        
 
 expresion       : expresion AXE expresion
