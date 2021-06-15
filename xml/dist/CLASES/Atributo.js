@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Atributo = void 0;
 class Atributo {
     constructor(identificador, valor, linea, columna) {
         this.identificador = identificador;
@@ -6,4 +9,4 @@ class Atributo {
         this.columna = columna;
     }
 }
-
+exports.Atributo = Atributo;

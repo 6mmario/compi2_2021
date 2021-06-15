@@ -98,15 +98,18 @@ BSL                                 "\\".
 S               : consultas EOF { $$ = $1; return $$; }
                 ;
 
-consultas       : consultas SOR expresion 
-                | expresion  { $$ = $1; }
+consultas       : consultas SOR nodos 
+                | nodos  { $$ = $1; }
                 ;    
 
-expresion       : DSLASH expresion %prec DSLASH
+nodos           : DSLASH expresion %prec DSLASH
                 | SLASH expresion  %prec SLASH  
                 | expresion DSLASH expresion
                 | expresion SLASH expresion
-                | expresion AXE expresion
+                | expresion
+                ;        
+
+expresion       : expresion AXE expresion
                 | expresion AND expresion                          
                 | expresion OR expresion                         
                 | NOT expresion %prec NOT     
@@ -115,7 +118,7 @@ expresion       : DSLASH expresion %prec DSLASH
                 | expresion GT expresion                      
                 | expresion GTE expresion                   
                 | expresion LT expresion                     
-                | expresion LTE expresion                 
+                | expresion LTE expresion           
                 | expresion MOD expresion           { $$ = new Operacion($1,$3,Operador.MOD, @1.first_line, @1.first_column); }                           
                 | expresion DIV expresion           { $$ = new Operacion($1,$3,Operador.DIVISION, @1.first_line, @1.first_column); }                           
                 | expresion TIMES expresion         { $$ = new Operacion($1,$3,Operador.MULTIPLICACION, @1.first_line, @1.first_column); }                      
@@ -143,7 +146,7 @@ nodo            : AT TIMES
 
 predicado       : IDENTIFIER cors
                 | IDENTIFIER func
-                | IDENTIFIER { $$ = new Operacion($1,$1,Operador.NODO,@1.first_line,@1.first_column); }
+                | IDENTIFIER                        { $$ = new Operacion($1,$1,Operador.NODO,@1.first_line,@1.first_column); }
                 ;
 
 func            : LPAREN args PAREN

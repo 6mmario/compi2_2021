@@ -30,6 +30,6 @@ const elementos = analizador.parse(`
 </bookstore>
 `);
 //console.log(typeof elementos);
-let elementosCast = elementos;
-const ambitoGlobal = elementosCast.construirTablaSimbolos(null);
+let elementoRaiz = elementos;
+const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
 console.log(ambitoGlobal);
