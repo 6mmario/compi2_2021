@@ -101,13 +101,13 @@ case 3:
     
 break;
 case 4:
- this.$ =  new Elemento(String($$[$0-6]).replace(/\s/g,''), $$[$0-3].texto, _$[$0-7].first_line, _$[$0-7].first_column, $$[$0-5].atributo, $$[$0-3].hijos); /*console.log('Tag->',$$[$0-6],'\n',$$[$0-3].hijos,'\n <-cerrar');*/
+ this.$ =  new Elemento(String($$[$0-6]).replace(/\s/g,''), $$[$0-3].texto, _$[$0-7].first_line, _$[$0-7].first_column, $$[$0-5], $$[$0-3].hijos); /*console.log('Tag->',$$[$0-6],'\n',$$[$0-3].hijos,'\n <-cerrar');*/
 break;
 case 5:
-this.$ =  new Elemento(String($$[$0-5]).replace(/\s/g,''), $$[$0-2].texto, _$[$0-6].first_line, _$[$0-6].first_column, $$[$0-4].atributo, []);
+this.$ =  new Elemento(String($$[$0-5]).replace(/\s/g,''), $$[$0-2].texto, _$[$0-6].first_line, _$[$0-6].first_column, $$[$0-4], []);
 break;
 case 6:
-this.$ =  new Elemento(String($$[$0-3]).replace(/\s/g,''), $$[$0].texto, _$[$0-4].first_line, _$[$0-4].first_column, $$[$0-2].atributo, []) ;
+this.$ =  new Elemento(String($$[$0-3]).replace(/\s/g,''), $$[$0].texto, _$[$0-4].first_line, _$[$0-4].first_column, $$[$0-2], []) ;
 break;
 case 7: case 9: case 11: case 13:
  $$[$0].texto += String($$[$0-1]); this.$ = $$[$0]; 
@@ -122,91 +122,49 @@ case 15:
  this.$ = {texto:'', hijos:[]}; 
 break;
 case 16:
- var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('lthan'+ conta++,$$[$0])); this.$ = {"val":String('<'), "nodoCST":pred}; 
+ this.$ = String('<'); 
 break;
 case 17:
- var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('gthan'+ conta++,$$[$0])); this.$ = {"val":String('>'), "nodoCST":pred}; 
+ this.$ = String('>'); 
 break;
 case 18:
- var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('amp'+ conta++,$$[$0]));   this.$ = {"val":String('&'), "nodoCST":pred}; 
+ this.$ = String('&'); 
 break;
 case 19:
- var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('apos'+ conta++,$$[$0]));  this.$ = {"val":String("'"), "nodoCST":pred}; 
+ this.$ = String("'"); 
 break;
 case 20:
- this.$ = String('"');  
+ this.$ = String('"'); 
 break;
 case 21:
  
-
-                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
-                    raiz.hijos.push($$[$0].nodoCST);//L_ATRIBUTOS -> ATRIBUTOS
-
-                this.$ = {  "atributo": $$[$0].atributo, "nodoCST": raiz};
-                //this.$ = $$[$0].atributo; 
+    console.log("QUE MIERDA HAY AQUI?",$$[$0]);
+                this.$ = $$[$0]; 
                 //console.log('IMPRESION FINAL:\n',$$[$0]);
             
 break;
 case 22:
-
-
-                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
-                    raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon'));//L_ATRIBUTOS -> EPSILON
-
-                this.$ = {  "atributo": [], "nodoCST": raiz};
-                //this.$ = [];
-                
-             
+this.$ = []; 
 break;
 case 23:
 
-
-                var raiz = new nodoCST('ATRIBUTOS'+ conta++,'ATRIBUTOS_PRIMA'); 
-                    raiz.hijos.push($$[$0-1].nodoCST);//ATRIBUTOS -> ATRIBUTO
-                    raiz.hijos.push($$[$0].nodoCST);//ATRIBUTOS -> ATRIBUTOS_PRIMA
-
-                $$[$0].atributo.unshift($$[$0-1].atributo);
-
-                this.$ = {  "atributo": $$[$0].atributo, "nodoCST": raiz};
-                //$$[$0].unshift($$[$0-1]); 
-                //this.$ = $$[$0];
+                $$[$0].unshift($$[$0-1]); 
+                this.$ = $$[$0];
             
 break;
 case 24:
-
-                        $$[$0].atributo.unshift($$[$0-1].atributo);
-
-                        var raiz = new nodoCST('AT_P'+ conta++,'ATRIBUTOS_PRIMA'); 
-                            raiz.hijos.push($$[$0-1].nodoCST);//ATRIBUTOS_PRIMA -> ATRIBUTO
-                            raiz.hijos.push($$[$0].nodoCST);//ATRIBUTOS_PRIMA -> ATRIBUTOS_PRIMA 
-
-                        this.$ = {  "atributo": $$[$0].atributo, "nodoCST": raiz}; 
-                    //$$[$0].unshift($$[$0-1]); 
-                    //this.$ = $$[$0];
+ 
+                    $$[$0].unshift($$[$0-1]);  
+                    this.$ = $$[$0]; 
                 
 break;
 case 25:
-
-                    var raiz = new nodoCST('AT_P'+ conta++,'ATRIBUTOS_PRIMA'); 
-                        raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon')); //ATRIBUTOS_PRIMA -> EPSILON
-                    this.$ = {  "atributo": [], "nodoCST": raiz}; 
-                    //this.$ = [];
-                
+ this.$ = []; 
 break;
 case 26:
  
-
-        var raiz = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO'); // inicializamos raiz de ATRIBUTO
-            raiz.hijos.push(new nodoCST('Tag_ID' + conta++, $$[$0-2]));
-            raiz.hijos.push(new nodoCST('Equal' + conta++ , '='));
-            raiz.hijos.push(new nodoCST('Tag_ID' + conta++, String($$[$0]).replace(/"/g,'')));
-        var newA = new Atributo((String($$[$0-2]).replace(/\s/g,'')), (String($$[$0]).replace(/"/g,'')), _$[$0-2].first_line, _$[$0-2].first_column);
-        console.log("QUE CARAJO HAY AQUI??->", newA);
-        this.$ = { 
-            "atributo" : newA, 
-            "nodoCST": raiz
-        }; 
-
+        this.$ = new Atributo(String($$[$0-2]).replace(/\s/g,''), String($$[$0]).replace(/"/g,''), _$[$0-2].first_line, _$[$0-2].first_column);
+    
 break;
 }
 },
@@ -692,50 +650,52 @@ options: {"case-insensitive":true},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0:return 10
+case 0:/* Ignorar comentarios */
 break;
-case 1:return 21
+case 1:return 10
 break;
-case 2:return 22
+case 2:return 21
 break;
-case 3:return 23
+case 3:return 22
 break;
-case 4:return 24
+case 4:return 23
 break;
-case 5:return 25
+case 5:return 24
 break;
-case 6:return 16
+case 6:return 25
 break;
-case 7:return 17
+case 7:return 16
 break;
-case 8:return 9
+case 8:return 17
 break;
-case 9:return 13
+case 9:return 9
 break;
-case 10:return 8
+case 10:return 13
 break;
-case 11:return 'QM'
+case 11:return 8
 break;
-case 12:return 11
+case 12:return 'QM'
 break;
-case 13:return "Alphanumeric"
+case 13:return 11
 break;
-case 14:return 'Quote'
+case 14:return "Alphanumeric"
 break;
-case 15:return 18
+case 15:return 'Quote'
 break;
-case 16:/* skip whitespace */
+case 16:return 18
 break;
-case 17:
+case 17:/* skip whitespace */
+break;
+case 18:
                                         console.error('Este es un error léxico: ' + yy_.yytext + ', en la linea: ' + yy_.yylloc.first_line + ', en la columna: ' + yy_.yylloc.first_column);
                                     
 break;
-case 18:return 5;
+case 19:return 5;
 break;
 }
 },
-rules: [/^(?:(([(a-z)|(A-Z)]+)([0-9]|(-|_)*|([(a-z)|(A-Z)]+))*([\n\r\t ])*))/i,/^(?:&lt;)/i,/^(?:&gt;)/i,/^(?:&amp;)/i,/^(?:&apos;)/i,/^(?:&quot;)/i,/^(?:<\/)/i,/^(?:\/)/i,/^(?:\?)/i,/^(?:>)/i,/^(?:<)/i,/^(?:>)/i,/^(?:=)/i,/^(?:("((\\([\'\"\\bfnrtv]))|([^\"\\]+))*"))/i,/^(?:")/i,/^(?:([^ \n][^<&]+))/i,/^(?:\s+)/i,/^(?:.)/i,/^(?:$)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],"inclusive":true}}
+rules: [/^(?:(<!--[\s\S\n]*?-->))/i,/^(?:(([(a-z)|(A-Z)]+)([0-9]|(-|_)*|([(a-z)|(A-Z)]+))*([\n\r\t ])*))/i,/^(?:&lt;)/i,/^(?:&gt;)/i,/^(?:&amp;)/i,/^(?:&apos;)/i,/^(?:&quot;)/i,/^(?:<\/)/i,/^(?:\/)/i,/^(?:\?)/i,/^(?:>)/i,/^(?:<)/i,/^(?:>)/i,/^(?:=)/i,/^(?:("((\\([\'\"\\bfnrtv]))|([^\"\\]+))*"))/i,/^(?:")/i,/^(?:([^ \n][^<&]+))/i,/^(?:\s+)/i,/^(?:.)/i,/^(?:$)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],"inclusive":true}}
 });
 return lexer;
 })();

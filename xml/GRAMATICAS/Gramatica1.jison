@@ -20,6 +20,7 @@ letras [(a-z)|(A-Z)]+
 keyboard [\n\r\t ]               // Tabulador, espacios, saltos de linea, retornos de carro -> forman parte del identificador para evitar conflictos, sin embargo deben ser eliminados unicamente cuando venga un nombre de un TAG
 identificador  {letras}( [0-9]|(\-|\_)*|{letras} )*{keyboard}*
 strings   [^ \n][^<&]+
+comments  \<\!\-\-[\s\S\n]*?\-\-\>   //[\s\S\n]*
 
 %%     
 
@@ -27,6 +28,7 @@ strings   [^ \n][^<&]+
 //"print"                     return "print"
 //{double}                    return 'Number_Literal'
 //{integer}                   return 'Number_Literal'
+{comments}                  /* Ignorar comentarios */
 {identificador}             return 'Tag_ID'
 "&lt;"                      return 'lthan'
 "&gt;"                      return 'gthan'
@@ -168,7 +170,7 @@ TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   LT F_Slash Tag_ID GT          {
 ;
 // PRODUCCION
 ELEMENTOS: ELEMENTOS TAG                { 
-                                var raiz = new nodoCST('ELEMENTOSFAIL'+ conta++,'ELEMENTOS');
+                                var raiz = new nodoCST('ELEMENTOS'+ conta++,'ELEMENTOS');
                                 //console.log("Que hay  antes? ", $1.nodoCST,'\n\n');
                                     raiz.hijos.push($1.nodoCST); // ELEMENTOS -> ELEMENTOS
                                     raiz.hijos.push($2.nodoCST); // ELEMENTOS -> TAG
@@ -194,7 +196,7 @@ ELEMENTOS: ELEMENTOS TAG                {
                                             //console.log("Que retorno::posible error->",$1);
         }
         |  ELEMENTOS Tag_ID             { 
-                            elem = new nodoCST('ELEM'+ conta++,'ELEMENTOS');
+                            var elem = new nodoCST('ELEM'+ conta++,'ELEMENTOS');
                                 elem.hijos.push($1.nodoCST); // Almacenamos el hijo adentro del padre
                                 elem.hijos.push(new nodoCST('Tag_ID'+ conta++, $2));
                             $1.nodoCST = elem; // Actualizamos lo que traia antes 
