@@ -119,12 +119,12 @@ TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   endTag Tag_ID GT    { $$ =  new Elem
 
 
 ELEMENTOS:  strings ELEMENTOS_PRIMA                 { $2.texto += String($1); $$ = $2; }
-            | PREDEFINIDOS ELEMENTOS_PRIMA          { $2.texto += $1.val;         $$ = $2; }
+            | PREDEFINIDOS ELEMENTOS_PRIMA          { $2.texto += $1;         $$ = $2; }
             | Tag_ID ELEMENTOS_PRIMA                { $2.texto += String($1); $$ = $2; }
             | TAG ELEMENTOS_PRIMA                   { $2.hijos.unshift($1);   $$ = $2; }
 ;
 ELEMENTOS_PRIMA:  strings ELEMENTOS_PRIMA           { $2.texto += String($1); $$ = $2; }
-                | PREDEFINIDOS ELEMENTOS_PRIMA      { $2.texto += $1.val;         $$ = $2; }
+                | PREDEFINIDOS ELEMENTOS_PRIMA      { $2.texto += $1;         $$ = $2; }
                 | Tag_ID ELEMENTOS_PRIMA            { $2.texto += String($1); $$ = $2; }
                 | TAG ELEMENTOS_PRIMA               { $2.hijos.unshift($1);   $$ = $2; }
                 | /*EPSILON*/                       { $$ = {texto:'', hijos:[]}; }
