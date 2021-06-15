@@ -284,7 +284,9 @@ case 20:
 break;
 case 21:
  
-                this.$ = {  "atributo": [], "nodoCST": new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS')  }; 
+                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
+                    raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon-empty'));
+                this.$ = {  "atributo": [], "nodoCST": raiz}; 
             
 break;
 case 22:
@@ -313,7 +315,7 @@ break;
 case 24:
 
     //this.$ = new Atributo(String($$[$0-2]).replace(/\s/g,''), $$[$0], _$[$0-2].first_line, _$[$0-2].first_column);
-    let raiz2 = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO',); // inicializamos raiz de ATRIBUTO
+    let raiz2 = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO'); // inicializamos raiz de ATRIBUTO
         raiz2.hijos.push(new nodoCST('Tag_ID' + conta++, $$[$0-2]));
         raiz2.hijos.push(new nodoCST('Equal' + conta++ , '='));
         raiz2.hijos.push(new nodoCST('Tag_ID' + conta++, String($$[$0]).replace(/"/g,'')));

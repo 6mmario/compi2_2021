@@ -251,7 +251,9 @@ L_ATRIBUTOS: ATRIBUTOS      {
                 
             } 
             |  /*Epsilon*/   { 
-                $$ = {  "atributo": [], "nodoCST": new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS')  }; 
+                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
+                    raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon-empty'));
+                $$ = {  "atributo": [], "nodoCST": raiz}; 
             } 
 ;            
 
@@ -279,12 +281,12 @@ ATRIBUTOS: ATRIBUTOS ATRIBUTO   {
 
 ATRIBUTO: Tag_ID Equal Alphanumeric      {
     //$$ = new Atributo(String($1).replace(/\s/g,''), $3, @1.first_line, @1.first_column);
-    let raiz2 = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO',); // inicializamos raiz de ATRIBUTO
+    let raiz2 = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO'); // inicializamos raiz de ATRIBUTO
         raiz2.hijos.push(new nodoCST('Tag_ID' + conta++, $1));
         raiz2.hijos.push(new nodoCST('Equal' + conta++ , '='));
         raiz2.hijos.push(new nodoCST('Tag_ID' + conta++, String($3).replace(/"/g,'')));
     $$ = { 
-        "atributo" : new Atributo(String($1).replace(/\s/g,''), $3, @1.first_line, @1.first_column), 
+        "atributo" : new Atributo(String($1).replace(/\s/g,''), String($3).replace(/"/g,''), @1.first_line, @1.first_column), 
         "nodoCST": raiz2
     }; 
 }

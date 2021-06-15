@@ -66,6 +66,7 @@ strings   [^ \n][^<&]+
 %{
     const {Elemento} = require("../../CLASES/Elemento");
     const {Atributo} = require("../../CLASES/Atributo");
+    const {nodoCST} = require("../../CLASES/nodoCST");
     let conta = 0;
 %}
 
@@ -95,9 +96,9 @@ PROLOG: LT qm Tag_ID Tag_ID Equal Alphanumeric Tag_ID Equal Alphanumeric qm GT {
     }
 ;
 
-TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   endTag Tag_ID GT          { $$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, $5.hijos); /*console.log('Tag->',$2,'\n',$5.hijos,'\n <-cerrar');*/}
-    | LT Tag_ID L_ATRIBUTOS GT              endTag Tag_ID GT          {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, []);}
-    | LT Tag_ID L_ATRIBUTOS F_Slash GT                                    {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, []) ;}
+TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   endTag Tag_ID GT          { $$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3.atributo, $5.hijos); /*console.log('Tag->',$2,'\n',$5.hijos,'\n <-cerrar');*/}
+    | LT Tag_ID L_ATRIBUTOS GT              endTag Tag_ID GT          {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3.atributo, []);}
+    | LT Tag_ID L_ATRIBUTOS F_Slash GT                                {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3.atributo, []) ;}
 ;
 
 //ELEMENTOS: ELEMENTOS TAG                { $1.hijos.push($2); $$ = $1;         }
@@ -115,27 +116,43 @@ TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   endTag Tag_ID GT          { $$ =  ne
 
 
 ELEMENTOS:  strings ELEMENTOS_PRIMA                 { $2.texto += String($1); $$ = $2; }
-            | PREDEFINIDOS ELEMENTOS_PRIMA          { $2.texto += $1;         $$ = $2; }
+            | PREDEFINIDOS ELEMENTOS_PRIMA          { $2.texto += $1.val;         $$ = $2; }
             | Tag_ID ELEMENTOS_PRIMA                { $2.texto += String($1); $$ = $2; }
             | TAG ELEMENTOS_PRIMA                   { $2.hijos.unshift($1);   $$ = $2; }
 ;
 ELEMENTOS_PRIMA:  strings ELEMENTOS_PRIMA           { $2.texto += String($1); $$ = $2; }
-                | PREDEFINIDOS ELEMENTOS_PRIMA      { $2.texto += $1;         $$ = $2; }
+                | PREDEFINIDOS ELEMENTOS_PRIMA      { $2.texto += $1.val;         $$ = $2; }
                 | Tag_ID ELEMENTOS_PRIMA            { $2.texto += String($1); $$ = $2; }
                 | TAG ELEMENTOS_PRIMA               { $2.hijos.unshift($1);   $$ = $2; }
                 | /*EPSILON*/                       { $$ = {texto:'', hijos:[]}; }
 ;
 
 
-PREDEFINIDOS: lthan     { $$ = String('<');  }
-            | gthan     { $$ = String('>');  }
-            | amp       { $$ = String('&');  }
-            | apos      { $$ = String("'");  }
+PREDEFINIDOS: lthan     { var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('lthan'+ conta++,$1)); $$ = {"val":String('<'), "nodoCST":pred}; }
+            | gthan     { var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('gthan'+ conta++,$1)); $$ = {"val":String('>'), "nodoCST":pred}; }
+            | amp       { var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('amp'+ conta++,$1));   $$ = {"val":String('&'), "nodoCST":pred}; }
+            | apos      { var pred = new nodoCST('PREDEFINIDOS'+ conta++,'PREDEFINIDOS'); pred.hijos.push(new nodoCST('apos'+ conta++,$1));  $$ = {"val":String("'"), "nodoCST":pred}; }
             | quot      { $$ = String('"');  }
 ;
 
-L_ATRIBUTOS: ATRIBUTOS      { $$ = $1; console.log('IMPRESION FINAL:\n',$1);} 
-            |               { $$ = []; } // arreglo vacio de atributos
+L_ATRIBUTOS: ATRIBUTOS      { 
+
+                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
+                    raiz.hijos.push($1.nodoCST);//L_ATRIBUTOS -> ATRIBUTOS
+
+                $$ = {  "atributo": $1.atributo, "nodoCST": raiz};
+                //$$ = $1.atributo; 
+                //console.log('IMPRESION FINAL:\n',$1);
+            } 
+            | /*EPSILON*/   {
+
+                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
+                    raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon'));//L_ATRIBUTOS -> EPSILON
+
+                $$ = {  "atributo": [], "nodoCST": raiz};
+                //$$ = [];
+                
+             } // arreglo vacio de atributos
 ;            
 
 /*
@@ -144,13 +161,57 @@ ATRIBUTOS: ATRIBUTOS ATRIBUTO   { $1.push($2); $$ = $1; }
 ;
 */ 
 // Reescribir removiendo la recursividad 
-ATRIBUTOS: ATRIBUTO ATRIBUTOS_PRIMA              {$2.unshift($1); $$ = $2;} 
+ATRIBUTOS: ATRIBUTO ATRIBUTOS_PRIMA              {
+
+                var raiz = new nodoCST('ATRIBUTOS'+ conta++,'ATRIBUTOS_PRIMA'); 
+                    raiz.hijos.push($1.nodoCST);//ATRIBUTOS -> ATRIBUTO
+                    raiz.hijos.push($2.nodoCST);//ATRIBUTOS -> ATRIBUTOS_PRIMA
+
+                $2.atributo.unshift($1.atributo);
+
+                $$ = {  "atributo": $2.atributo, "nodoCST": raiz};
+                //$2.unshift($1); 
+                //$$ = $2;
+            } 
 ;
-ATRIBUTOS_PRIMA : ATRIBUTO ATRIBUTOS_PRIMA       {$2.unshift($1); $$ = $2;} 
-                | /*Epsilon*/                    {$$ = [];} 
+ATRIBUTOS_PRIMA : ATRIBUTO ATRIBUTOS_PRIMA       {
+                        $2.atributo.unshift($1.atributo);
+
+                        var raiz = new nodoCST('AT_P'+ conta++,'ATRIBUTOS_PRIMA'); 
+                            raiz.hijos.push($1.nodoCST);//ATRIBUTOS_PRIMA -> ATRIBUTO
+                            raiz.hijos.push($2.nodoCST);//ATRIBUTOS_PRIMA -> ATRIBUTOS_PRIMA 
+
+                        $$ = {  "atributo": $2.atributo, "nodoCST": raiz}; 
+                    //$2.unshift($1); 
+                    //$$ = $2;
+                } 
+                | /*Epsilon*/                    {
+                    var raiz = new nodoCST('AT_P'+ conta++,'ATRIBUTOS_PRIMA'); 
+                        raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon')); //ATRIBUTOS_PRIMA -> EPSILON
+                    $$ = {  "atributo": [], "nodoCST": raiz}; 
+                    //$$ = [];
+                } 
 ;
 
-ATRIBUTO: Tag_ID Equal Alphanumeric         { $$ = new Atributo(String($1).replace(/\s/g,''), $3, @1.first_line, @1.first_column);}
+ATRIBUTO: Tag_ID Equal Alphanumeric         { 
+
+        var raiz = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO'); // inicializamos raiz de ATRIBUTO
+            raiz.hijos.push(new nodoCST('Tag_ID' + conta++, $1));
+            raiz.hijos.push(new nodoCST('Equal' + conta++ , '='));
+            raiz.hijos.push(new nodoCST('Tag_ID' + conta++, String($3).replace(/"/g,'')));
+        var newA = new Atributo((String($1).replace(/\s/g,'')), (String($3).replace(/"/g,'')), @1.first_line, @1.first_column);
+        console.log("QUE CARAJO HAY AQUI??->", newA);
+        $$ = { 
+            "atributo" : newA, 
+            "nodoCST": raiz
+        }; 
+}
 ;
+
+/*
+1) usar replace " en alphanumeric
+2) Terminar el cst desc
+3) agregar comentarios 
+*/
 
 
