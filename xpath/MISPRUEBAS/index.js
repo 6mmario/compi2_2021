@@ -1,13 +1,12 @@
 "use strict";
-const gramatica = require('../Gramatica/gramaticaV2');
-const descgramatica = require('../Gramatica/descgramatica');
+//const gramaticaV2 = require('../Gramatica/gramaticaV2');
 //TODO variable para almacenar el cst
 let arbol_cst = null; // variable para almacenar el ast resultante del analizis
 let arbol_ast = null; // variable para almacenar el ast resultante del analizis
 function ejecutarCodigo(entrada) {
     arbol_cst = null;
     arbol_ast = null;
-    const objetos = gramatica.parse(entrada);
+    const objetos = gramaticaV2.parse(entrada);
     arbol_cst = objetos.cst;
     arbol_ast = objetos.cst;
     //console.table(arbol_cst);
@@ -102,4 +101,3 @@ function recorrerArbolRG(indice, nodo_actual) {
     }
     return resrg;
 }
-ejecutarCodigo(`//hola/hjola`);
