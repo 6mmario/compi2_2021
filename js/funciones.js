@@ -84,10 +84,3 @@ function getXML(){
     var entrada = editor.getValue();
     return entrada;
 }
-
-function ejecutar(){
-    var tabla = analizarXML();
-    var cadena = analizarXPath();
-    console.log(tabla);
-    console.log(cadena);
-}
