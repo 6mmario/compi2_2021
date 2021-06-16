@@ -95,30 +95,27 @@ BSL                                 "\\".
 
 %%
 
-S               : consultas EOF { $$ = $1; return $$; }
+S               : consultas EOF                     { $$ = $1; return $$; }
                 ;
 
-consultas       : consultas SOR nodos 
-                | nodos  { $$ = $1; }
+consultas       : consultas SOR expresion           { $1.push($3); $$ = $1; }
+                | expresion                         { $$ = [$1]; }
                 ;    
 
-nodos           : DSLASH expresion %prec DSLASH
-                | SLASH expresion  %prec SLASH  
-                | expresion DSLASH expresion
-                | expresion SLASH expresion
-                | expresion { $$ = $1; }
-                ;        
-
-expresion       : expresion AXE expresion
-                | expresion AND expresion                          
-                | expresion OR expresion                         
-                | NOT expresion %prec NOT     
-                | expresion ASIG expresion
-                | expresion NEQUAL expresion                              
-                | expresion GT expresion                      
-                | expresion GTE expresion                   
-                | expresion LT expresion                     
-                | expresion LTE expresion           
+expresion       : DSLASH expresion %prec DSLASH     { var lista = []; lista.push($2.pop()); $$ = lista; }
+                | SLASH expresion  %prec SLASH      { var lista = []; lista.push($2.pop()); $$ = lista; }
+                | expresion DSLASH expresion        { $1.push($3.pop()); $$ = $1; }
+                | expresion SLASH expresion         { $1.push($3.pop()); $$ = $1; }
+                | expresion AXE expresion           { $$ = new Operacion($1,$3,Operador.AXE, @1.first_line, @1.first_column); }
+                | expresion AND expresion           { $$ = new Operacion($1,$3,Operador.AND, @1.first_line, @1.first_column); }              
+                | expresion OR expresion            { $$ = new Operacion($1,$3,Operador.OR, @1.first_line, @1.first_column); }                  
+                | NOT expresion %prec NOT           { $$ = new Operacion($2,$2,Operador.NOT, @1.first_line, @1.first_column); }
+                | expresion ASIG expresion          { $$ = new Operacion($1,$3,Operador.IGUAL_QUE, @1.first_line, @1.first_column); }
+                | expresion NEQUAL expresion        { $$ = new Operacion($1,$3,Operador.DIFERENTE_QUE, @1.first_line, @1.first_column); }                      
+                | expresion GT expresion            { $$ = new Operacion($1,$3,Operador.MAYOR_QUE, @1.first_line, @1.first_column); }          
+                | expresion GTE expresion           { $$ = new Operacion($1,$3,Operador.MAYOR_IGUA_QUE, @1.first_line, @1.first_column); }        
+                | expresion LT expresion            { $$ = new Operacion($1,$3,Operador.MENOR_QUE, @1.first_line, @1.first_column); }         
+                | expresion LTE expresion           { $$ = new Operacion($1,$3,Operador.MENOR_IGUA_QUE, @1.first_line, @1.first_column); }
                 | expresion MOD expresion           { $$ = new Operacion($1,$3,Operador.MOD, @1.first_line, @1.first_column); }                           
                 | expresion DIV expresion           { $$ = new Operacion($1,$3,Operador.DIVISION, @1.first_line, @1.first_column); }                           
                 | expresion TIMES expresion         { $$ = new Operacion($1,$3,Operador.MULTIPLICACION, @1.first_line, @1.first_column); }                      
@@ -126,27 +123,27 @@ expresion       : expresion AXE expresion
                 | expresion MINUS expresion         { $$ = new Operacion($1,$3,Operador.RESTA, @1.first_line, @1.first_column); }
                 | LPAREN expresion RPAREN           { $$ = $2 }                   
                 | MINUS expresion %prec UMINUS      { $$ = new Operacion($2,$2,Operador.MENOS_UNARIO, @1.first_line, @1.first_column); }
-                | expresion TIMES        
-                | TIMES                       
-                | DOUBLELITERAL                                        
-                | INTEGERLITERAL                                        
-                | STRINGLITERAL     
-                | CHARLITERAL        
-                | nodo                              { $$ = $1 }       
-                | DOT nodo
-                | DDOT nodo   
-                | DOT
-                | DDOT                       
+                | expresion TIMES                   { $$ = new Operacion($1,$1,Operador.POR_WILDCARD, @1.first_line, @1.first_column); }       
+                | TIMES                             { $$ = new Operacion($1,$1,Operador.POR, @1.first_line, @1.first_column); }              
+                | DOUBLELITERAL                     { $$ = new Operacion($1,$1,Operador.DECIMAL, @1.first_line, @1.first_column); }                   
+                | INTEGERLITERAL                    { $$ = new Operacion($1,$1,Operador.ENTERO, @1.first_line, @1.first_column); }                    
+                | STRINGLITERAL                     { $$ = new Operacion($1,$1,Operador.CADENA, @1.first_line, @1.first_column); }
+                | CHARLITERAL                       { $$ = new Operacion($1,$1,Operador.CADENA, @1.first_line, @1.first_column); }
+                | nodo                              { var lista = []; lista.push(new Nodo($1, false)); $$ = lista; }       
+                | DOT nodo                          { $$ = new Operacion($2,$2,Operador.DOT, @1.first_line, @1.first_column); }
+                | DDOT nodo                         { $$ = new Operacion($2,$2,Operador.DOUBLE_DOT, @1.first_line, @1.first_column); }
+                | DOT                               { $$ = new Operacion(null,null,Operador.DOT, @1.first_line, @1.first_column); }
+                | DDOT                              { $$ = new Operacion(null,null,Operador.DOUBLE_DOT, @1.first_line, @1.first_column); }              
                 ;
 
 nodo            : AT TIMES
-                | AT predicado
-                | predicado                         { $$ = $1 }                      
+                | AT predicado                      { $$ = $2; }
+                | predicado                         { $$ = $1; }                      
                 ;
 
 predicado       : IDENTIFIER cors
                 | IDENTIFIER func
-                | IDENTIFIER                        { $$ = new Operacion($1,$1,Operador.NODO,@1.first_line,@1.first_column); }
+                | IDENTIFIER                        { $$ = $1; }
                 ;
 
 func            : LPAREN args PAREN
@@ -157,6 +154,6 @@ args            : args COMA expresion
                 | expresion
                 ;                 
 
-cors            : cors LCOR expresion RCOR                
-                | LCOR expresion RCOR
+cors            : cors LCOR expresion RCOR             
+                | LCOR expresion RCOR               { $$ = $2; }        
                 ;

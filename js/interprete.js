@@ -3,12 +3,17 @@ function ejecutarCodigo() {
     var entradaQuery = getXPath();
     var xml = Gramatica1.parse(entradaXML);
     var query = gramatica.parse(entradaQuery);
-    const entornoGlobal = new Ambito(null);
-    console.log(xml);
+    const ambitoGlobal = new Ambito(null);
+    console.log(query);
+    query.forEach(consulta => {
+        consulta.forEach(nodo => {
+            console.log(nodo);
+        })
+    });
     /*Object.values(xml.lista_elementos).forEach(elemento => {
         console.log(elemento.identificador);
     });*/
-    xml.construirTablaSimbolos(entornoGlobal);
+    xml.construirTablaSimbolos(ambitoGlobal);
     
 }
 
@@ -21,3 +26,4 @@ function recorrerXML(xml){
         }
     }
 }
+
