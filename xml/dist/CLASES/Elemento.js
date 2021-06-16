@@ -1,9 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Elemento = void 0;
-const Ambito_1 = require("./Ambito");
-const Simbolo_1 = require("./Simbolo");
-const Tipo_1 = require("./Tipo");
 class Elemento {
     constructor(identificador, texto, linea, columna, lista_atributos, lista_elementos) {
         this.identificador = identificador;
@@ -35,4 +29,3 @@ class Elemento {
         return this.ambito; // Podria retornar un ambito que no contiene ni Etiquetas ni Atributos..
     }
 }
-exports.Elemento = Elemento;

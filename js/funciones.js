@@ -83,4 +83,14 @@ function getXML(){
     var editor = $('.CodeMirror')[0].CodeMirror;
     var entrada = editor.getValue();
     return entrada;
+<<<<<<< HEAD
+=======
+}
+
+function ejecutar(){
+    var tabla = analizarXML();
+    var cadena = analizarXPath();
+    console.log(tabla);
+    console.log(cadena);
+>>>>>>> feature/graph_3283
 }

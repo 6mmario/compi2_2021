@@ -76,12 +76,10 @@ BSL                                 "\\".
 
 /lex
 
-//SECCION DE IMPORTS
 %{
-
+    const nodo_ast = require('../NODOS/nodo_ast');
 %}
 
-// DEFINIMOS PRESEDENCIA DE OPERADORES
 %left 'DSLASH', 'SLASH'
 %left 'AXE'
 %left 'OR'
@@ -99,62 +97,10 @@ BSL                                 "\\".
 
 S               : consultas EOF
                 ;
-
-consultas       : consultas SOR expresion
-                | expresion
-                ;    
-
-expresion       : DSLASH expresion %prec DSLASH  
-                | SLASH expresion  %prec SLASH  
-                | expresion DSLASH expresion
-                | expresion SLASH expresion
-                | expresion AXE expresion
-                | expresion AND expresion                          
-                | expresion OR expresion                         
-                | NOT expresion %prec NOT     
-                | expresion ASIG expresion
-                | expresion NEQUAL expresion                              
-                | expresion GT expresion                      
-                | expresion GTE expresion                   
-                | expresion LT expresion                     
-                | expresion LTE expresion                 
-                | expresion MOD expresion        
-                | expresion DIV expresion                                     
-                | expresion TIMES expresion                           
-                | expresion PLUS expresion          
-                | expresion MINUS expresion                        
-                | MINUS expresion %prec UMINUS   
-                | expresion TIMES        
-                | TIMES                       
-                | DOUBLELITERAL                                        
-                | INTEGERLITERAL                                        
-                | STRINGLITERAL     
-                | CHARLITERAL        
-                | nodo 
-                | DOT nodo
-                | DDOT nodo   
-                | DOT
-                | DDOT                       
-                ;
-
-nodo            : AT TIMES
-                | AT predicado
-                | predicado                
-                ;
-
-predicado       : IDENTIFIER cors
-                | IDENTIFIER func
-                | IDENTIFIER
-                ;
-
-func            : LPAREN args PAREN
-                | LPAREN RPAREN
-                ;               
-
-args            : args COMA expresion
-                | expresion
-                ;                 
-
-cors            : cors LCOR expresion RCOR                
-                | LCOR expresion RCOR
+/*
+ASIG -> id ASIGP
+ASIGP -> , ASIG
+ASIGP -> ''
+*/
+consultas       : expresion expresionP
                 ;

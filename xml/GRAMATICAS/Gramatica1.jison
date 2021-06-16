@@ -65,10 +65,14 @@ comments  \<\!\-\-[\s\S\n]*?\-\-\>   //[\s\S\n]*
 
 //SECCION DE IMPORTS
 %{
+<<<<<<< HEAD
     const {Elemento} = require("../../CLASES/Elemento");
     const {Atributo} = require("../../CLASES/Atributo");
     const {nodoCST} = require("../../CLASES/nodoCST");
     var conta = 0 ; // Unica forma de que la etiquetas sean unicas.
+=======
+
+>>>>>>> feature/graph_3283
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
@@ -88,6 +92,7 @@ START: TAGS EOF         {
     } 
 ;
    
+<<<<<<< HEAD
 TAGS: PROLOG TAG               {
         var raiz = new nodoCST('TAGS'+ conta++,'TAGS');
             raiz.hijos.push($1.nodoCST); // TAGS -> PROLOG
@@ -95,6 +100,9 @@ TAGS: PROLOG TAG               {
         $$ = {"elemento":$2.elemento, "nodoCST": raiz};
         //$$ = $2.elemento; /*console.log($2);*///console.log($1.nodo.crearNodosFormatoDOT());
     } 
+=======
+TAGS: PROLOG TAG               {$$ = $2; /*console.log($2);*/} // objetos tipo TAG ($$ = clase Elemento)
+>>>>>>> feature/graph_3283
 ;
 
 // PRODUCCION
