@@ -6,8 +6,8 @@ import { Atributo } from "../CLASES/Atributo";
 //import { Objeto } from "../CLASES/Objeto";
 import { Instruccion } from "../CLASES/Instruccion";
 
-import gramatica1 = require('../xml/GRAMATICAS/gramatica1');
-import gramatica = require('../xpath/Gramatica/gramatica');
+const gramatica1 = require('../xml/GRAMATICAS/gramatica1');
+const gramatica = require('../xpath/Gramatica/gramatica');
 
 function ejecutarCodigo(txml: string, txpath: string){
     var entradaXML = txml;
