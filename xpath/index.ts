@@ -1,4 +1,4 @@
-const gramatica = require('../Gramatica/gramatica');
+const gramatica = require('../Gramatica/gramaticaV2');
 const descgramatica = require('../Gramatica/descgramatica');
 
 

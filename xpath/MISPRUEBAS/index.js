@@ -1,6 +1,6 @@
 "use strict";
-//const gramatica = require('../Gramatica/gramatica');
-//const descgramatica = require('../Gramatica/descgramatica');
+const gramatica = require('../Gramatica/gramaticaV2');
+const descgramatica = require('../Gramatica/descgramatica');
 //TODO variable para almacenar el cst
 let arbol_cst = null; // variable para almacenar el ast resultante del analizis
 let arbol_ast = null; // variable para almacenar el ast resultante del analizis

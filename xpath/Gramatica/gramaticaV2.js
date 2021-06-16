@@ -71,7 +71,7 @@
     recoverable: (boolean: TRUE when the parser has a error recovery rule available for this particular error)
   }
 */
-var gramatica = (function(){
+var gramaticaV2 = (function(){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,4],$V1=[1,5],$V2=[1,6],$V3=[1,9],$V4=[1,8],$V5=[1,7],$V6=[1,10],$V7=[1,11],$V8=[1,12],$V9=[1,13],$Va=[1,15],$Vb=[1,16],$Vc=[1,17],$Vd=[1,19],$Ve=[5,6],$Vf=[1,22],$Vg=[1,23],$Vh=[1,24],$Vi=[1,25],$Vj=[1,26],$Vk=[1,27],$Vl=[1,28],$Vm=[1,29],$Vn=[1,30],$Vo=[1,31],$Vp=[1,32],$Vq=[1,33],$Vr=[1,34],$Vs=[1,35],$Vt=[1,36],$Vu=[1,37],$Vv=[5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,26,40,41,43],$Vw=[5,6,8,9,26,40,41,43],$Vx=[5,6,8,9,10,11,12,14,15,26,40,41,43],$Vy=[5,6,8,9,10,11,12,14,15,16,17,18,19,20,22,23,24,26,40,41,43],$Vz=[40,41],$VA=[5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,26,40,41,42,43];
 var parser = {trace: function trace () { },
 yy: {},
@@ -1036,9 +1036,9 @@ return new Parser;
 
 
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
-exports.parser = gramatica;
-exports.Parser = gramatica.Parser;
-exports.parse = function () { return gramatica.parse.apply(gramatica, arguments); };
+exports.parser = gramaticaV2;
+exports.Parser = gramaticaV2.Parser;
+exports.parse = function () { return gramaticaV2.parse.apply(gramaticaV2, arguments); };
 exports.main = function commonjsMain (args) {
     if (!args[1]) {
         console.log('Usage: '+args[0]+' FILE');
