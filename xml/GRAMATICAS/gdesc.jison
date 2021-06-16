@@ -13,20 +13,23 @@ acceptedcharsdouble                 [^\"\\]+
 stringdouble                        {escape}|{acceptedcharsdouble}
 alfanumerico                       \"{stringdouble}*\"
 //strings                            {stringdouble}+
-
 integer [0-9]+
 double {integer}"."{integer}
 letras [(a-z)|(A-Z)]+
 keyboard [\n\r\t ]               // Tabulador, espacios, saltos de linea, retornos de carro -> forman parte del identificador para evitar conflictos, sin embargo deben ser eliminados unicamente cuando venga un nombre de un TAG
 identificador  {letras}( [0-9]|(\-|\_)*|{letras} )*{keyboard}*
 strings   [^ \n][^<&]+
-//endtag    [<][\s*][/] // -> "< /"
+
+comments  \<\!\-\-[\s\S\n]*?\-\-\>   //[\s\S\n]*
+
+// copia ->
 %%     
 
 //\s+                         /* skip whitespace */
 //"print"                     return "print"
 //{double}                    return 'Number_Literal'
 //{integer}                   return 'Number_Literal'
+{comments}                  /* Ignorar comentarios */
 {identificador}             return 'Tag_ID'
 "&lt;"                      return 'lthan'
 "&gt;"                      return 'gthan'
@@ -52,7 +55,9 @@ strings   [^ \n][^<&]+
 
 //error lexico
 .                                   {
-                                        console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                                        console.error('ERROOOOOR léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                                        arregloErrores.push(new Errores(yytext, 'LEXICO', yylloc.first_line, yylloc.first_column)); //Almacenamos los errores lexicos.
+                                        // Se recupera de cualquier error lexico (lexema | token no reconocido por el parser)
                                     }
 
 
@@ -66,7 +71,10 @@ strings   [^ \n][^<&]+
 %{
     const {Elemento} = require("../../CLASES/Elemento");
     const {Atributo} = require("../../CLASES/Atributo");
+    const {nodoCST} = require("../../CLASES/nodoCST");
+    const {Errores} = require("../../CLASES/Errores");
     let conta = 0;
+    let arregloErrores = [];  // clase? o un objeto...
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES
@@ -81,7 +89,10 @@ strings   [^ \n][^<&]+
 START: TAGS EOF         { $$ = $1; /*console.log($1, $2);*/ return $$; } //strings PREDEFINIDOS Tag_ID
 ;
    
-TAGS: PROLOG TAG               {$$ = $2; console.log($2);} // objetos tipo TAG ($$ = clase Elemento)
+TAGS: PROLOG TAG               {
+        $$ = {"elemento":$2, "errores": arregloErrores};
+        //$$ = $2; /*console.log($2);*/
+    } 
 ;
 
 PROLOG: LT qm Tag_ID Tag_ID Equal Alphanumeric Tag_ID Equal Alphanumeric qm GT { 
@@ -93,11 +104,12 @@ PROLOG: LT qm Tag_ID Tag_ID Equal Alphanumeric Tag_ID Equal Alphanumeric qm GT {
     else $$ = null;
     
     }
+    //| error  { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
-TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   endTag Tag_ID GT          { $$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, $5.hijos); /*console.log('Tag->',$2,'\n',$5.hijos,'\n <-cerrar');*/}
-    | LT Tag_ID L_ATRIBUTOS GT              endTag Tag_ID GT          {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, []);}
-    | LT Tag_ID L_ATRIBUTOS F_Slash GT                                    {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, []) ;}
+TAG:  LT Tag_ID L_ATRIBUTOS GT  ELEMENTOS   endTag Tag_ID GT    { $$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, $5.hijos); /*console.log('Tag->',$2,'\n',$5.hijos,'\n <-cerrar');*/}
+    | LT Tag_ID L_ATRIBUTOS GT              endTag Tag_ID GT    {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, []);}
+    | LT Tag_ID L_ATRIBUTOS F_Slash GT                          {$$ =  new Elemento(String($2).replace(/\s/g,''), $5.texto, @1.first_line, @1.first_column, $3, []) ;}
 ;
 
 //ELEMENTOS: ELEMENTOS TAG                { $1.hijos.push($2); $$ = $1;         }
@@ -127,15 +139,15 @@ ELEMENTOS_PRIMA:  strings ELEMENTOS_PRIMA           { $2.texto += String($1); $$
 ;
 
 
-PREDEFINIDOS: lthan     { $$ = String('<');  }
-            | gthan     { $$ = String('>');  }
-            | amp       { $$ = String('&');  }
-            | apos      { $$ = String("'");  }
-            | quot      { $$ = String('"');  }
+PREDEFINIDOS: lthan     { $$ = String('<'); }
+            | gthan     { $$ = String('>'); }
+            | amp       { $$ = String('&'); }
+            | apos      { $$ = String("'"); }
+            | quot      { $$ = String('"'); }
 ;
 
-L_ATRIBUTOS: ATRIBUTOS      { $$ = $1; console.log('IMPRESION FINAL:\n',$1);} 
-            |               { $$ = []; } // arreglo vacio de atributos
+L_ATRIBUTOS: ATRIBUTOS      { $$ = $1; } 
+            | /*EPSILON*/   {$$ = []; } 
 ;            
 
 /*
@@ -144,13 +156,23 @@ ATRIBUTOS: ATRIBUTOS ATRIBUTO   { $1.push($2); $$ = $1; }
 ;
 */ 
 // Reescribir removiendo la recursividad 
-ATRIBUTOS: ATRIBUTO ATRIBUTOS_PRIMA              {$2.unshift($1); $$ = $2;} 
+ATRIBUTOS: ATRIBUTO ATRIBUTOS_PRIMA              {
+                $2.unshift($1); 
+                $$ = $2;
+            } 
 ;
-ATRIBUTOS_PRIMA : ATRIBUTO ATRIBUTOS_PRIMA       {$2.unshift($1); $$ = $2;} 
-                | /*Epsilon*/                    {$$ = [];} 
+ATRIBUTOS_PRIMA : ATRIBUTO ATRIBUTOS_PRIMA       { 
+                    $2.unshift($1);  
+                    $$ = $2; 
+                } 
+                | /*Epsilon*/  { $$ = []; } 
 ;
 
-ATRIBUTO: Tag_ID Equal Alphanumeric         { $$ = new Atributo(String($1).replace(/\s/g,''), $3, @1.first_line, @1.first_column);}
+ATRIBUTO: Tag_ID Equal Alphanumeric   { 
+        $$ = new Atributo(String($1).replace(/\s/g,''), String($3).replace(/"/g,''), @1.first_line, @1.first_column);
+    }
 ;
+
+
 
 

@@ -8,7 +8,8 @@
     "gramatica": " cd GRAMATICAS && jison Gramatica1.jison ",
     "desc": " cd GRAMATICAS && jison gdesc.jison ",
     "start": "node ./dist/xml/index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod":"browserify ./dist/xml/index.js -o bundle.js"
   },
   "author": "Carlos Orantes",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "@types/node": "^15.12.0"
   },
   "dependencies": {
+    "browserify": "^17.0.0",
     "vis": "^4.21.0-EOL"
   }
 }

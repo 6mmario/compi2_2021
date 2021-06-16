@@ -178,7 +178,7 @@ case 6:
 break;
 case 7:
  
-                                var raiz = new nodoCST('ELEMENTOSFAIL'+ conta++,'ELEMENTOS');
+                                var raiz = new nodoCST('ELEMENTOS'+ conta++,'ELEMENTOS');
                                 //console.log("Que hay  antes? ", $$[$0-1].nodoCST,'\n\n');
                                     raiz.hijos.push($$[$0-1].nodoCST); // ELEMENTOS -> ELEMENTOS
                                     raiz.hijos.push($$[$0].nodoCST); // ELEMENTOS -> TAG
@@ -210,7 +210,7 @@ case 9:
 break;
 case 10:
  
-                            elem = new nodoCST('ELEM'+ conta++,'ELEMENTOS');
+                            var elem = new nodoCST('ELEM'+ conta++,'ELEMENTOS');
                                 elem.hijos.push($$[$0-1].nodoCST); // Almacenamos el hijo adentro del padre
                                 elem.hijos.push(new nodoCST('Tag_ID'+ conta++, $$[$0]));
                             $$[$0-1].nodoCST = elem; // Actualizamos lo que traia antes 
@@ -284,7 +284,9 @@ case 20:
 break;
 case 21:
  
-                this.$ = {  "atributo": [], "nodoCST": new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS')  }; 
+                var raiz = new nodoCST('L_ATRIBUTOS'+ conta++,'L_ATRIBUTOS'); 
+                    raiz.hijos.push(new nodoCST('epsilon'+ conta++,'epsilon-empty'));
+                this.$ = {  "atributo": [], "nodoCST": raiz}; 
             
 break;
 case 22:
@@ -313,12 +315,12 @@ break;
 case 24:
 
     //this.$ = new Atributo(String($$[$0-2]).replace(/\s/g,''), $$[$0], _$[$0-2].first_line, _$[$0-2].first_column);
-    let raiz2 = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO',); // inicializamos raiz de ATRIBUTO
+    let raiz2 = new nodoCST('ATRIBUTO'+ conta++,'ATRIBUTO'); // inicializamos raiz de ATRIBUTO
         raiz2.hijos.push(new nodoCST('Tag_ID' + conta++, $$[$0-2]));
         raiz2.hijos.push(new nodoCST('Equal' + conta++ , '='));
         raiz2.hijos.push(new nodoCST('Tag_ID' + conta++, String($$[$0]).replace(/"/g,'')));
     this.$ = { 
-        "atributo" : new Atributo(String($$[$0-2]).replace(/\s/g,''), $$[$0], _$[$0-2].first_line, _$[$0-2].first_column), 
+        "atributo" : new Atributo(String($$[$0-2]).replace(/\s/g,''), String($$[$0]).replace(/"/g,''), _$[$0-2].first_line, _$[$0-2].first_column), 
         "nodoCST": raiz2
     }; 
 
@@ -807,48 +809,50 @@ options: {"case-insensitive":true},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0:return 10
+case 0:/* Ignorar comentarios */
 break;
-case 1:return 19
+case 1:return 10
 break;
-case 2:return 20
+case 2:return 19
 break;
-case 3:return 21
+case 3:return 20
 break;
-case 4:return 22
+case 4:return 21
 break;
-case 5:return 23
+case 5:return 22
 break;
-case 6:return 16
+case 6:return 23
 break;
-case 7:return 9
+case 7:return 16
 break;
-case 8:return 13
+case 8:return 9
 break;
-case 9:return 8
+case 9:return 13
 break;
-case 10:return 'QM'
+case 10:return 8
 break;
-case 11:return 11
+case 11:return 'QM'
 break;
-case 12:return "Alphanumeric"
+case 12:return 11
 break;
-case 13:return 'Quote'
+case 13:return "Alphanumeric"
 break;
-case 14:return 17
+case 14:return 'Quote'
 break;
-case 15:/* skip whitespace */
+case 15:return 17
 break;
-case 16:
+case 16:/* skip whitespace */
+break;
+case 17:
                                         console.error('Este es un error léxico: ' + yy_.yytext + ', en la linea: ' + yy_.yylloc.first_line + ', en la columna: ' + yy_.yylloc.first_column);
                                     
 break;
-case 17:return 5;
+case 18:return 5;
 break;
 }
 },
-rules: [/^(?:(([(a-z)|(A-Z)]+)([0-9]|(-|_)*|([(a-z)|(A-Z)]+))*([\n\r\t ])*))/i,/^(?:&lt;)/i,/^(?:&gt;)/i,/^(?:&amp;)/i,/^(?:&apos;)/i,/^(?:&quot;)/i,/^(?:\/)/i,/^(?:\?)/i,/^(?:>)/i,/^(?:<)/i,/^(?:>)/i,/^(?:=)/i,/^(?:("((\\([\'\"\\bfnrtv]))|([^\"\\]+))*"))/i,/^(?:")/i,/^(?:([^ \n][^<&]+))/i,/^(?:\s+)/i,/^(?:.)/i,/^(?:$)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],"inclusive":true}}
+rules: [/^(?:(<!--[\s\S\n]*?-->))/i,/^(?:(([(a-z)|(A-Z)]+)([0-9]|(-|_)*|([(a-z)|(A-Z)]+))*([\n\r\t ])*))/i,/^(?:&lt;)/i,/^(?:&gt;)/i,/^(?:&amp;)/i,/^(?:&apos;)/i,/^(?:&quot;)/i,/^(?:\/)/i,/^(?:\?)/i,/^(?:>)/i,/^(?:<)/i,/^(?:>)/i,/^(?:=)/i,/^(?:("((\\([\'\"\\bfnrtv]))|([^\"\\]+))*"))/i,/^(?:")/i,/^(?:([^ \n][^<&]+))/i,/^(?:\s+)/i,/^(?:.)/i,/^(?:$)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],"inclusive":true}}
 });
 return lexer;
 })();
