@@ -79,6 +79,10 @@ function getXPath(){
     return document.getElementById("txtQuery").value;
 }
 
+function setConsola(texto){
+    document.getElementById("txtConsola").value = texto;
+}
+
 function getXML(){
     var editor = $('.CodeMirror')[0].CodeMirror;
     var entrada = editor.getValue();
