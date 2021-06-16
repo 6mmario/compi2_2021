@@ -77,7 +77,16 @@ BSL                                 "\\".
 /lex
 
 %{
-    const nodo_ast = require('../NODOS/nodo_ast');
+   function nodo_ast(tipo, valor, fila, columna, regla) {
+
+    this.Tipo = tipo;
+    this.Valor = valor;
+    this.Fila = fila;
+    this.Columna = columna;
+    this.Regla = regla;
+    this.hijos = new Array();
+
+}
 %}
 
 %left 'DSLASH', 'SLASH'

@@ -1,9 +1,12 @@
 <html lang="en">
 
 <head>
-    <title>BST Tree</title>
+    <title>CST</title>
     <script type="text/javascript" src="./js/vis-network.min.js"></script>
-    <script type="text/javascript" src="./js/bst.js"></script>
+    <script type="text/javascript" src="../xpath/Gramatica/gramatica.js"></script>
+    <script type="text/javascript" src="../xml/GRAMATICAS/Gramatica1.js"></script>
+    <script type="text/javascript" src="../js/interprete.js"></script>
+    <script type="text/javascript" src="../xpath/MISPRUEBAS/index.js"></script>
 
 </head>
 
@@ -13,7 +16,7 @@
     <script type="text/javascript">
         // create a network
         var container = document.getElementById("mynetwork");
-        var DOTstring = bst()
+        var DOTstring = localStorage.getItem("cst")
         console.table(DOTstring)
         var parsedData = vis.parseDOTNetwork(DOTstring);
         var data = {
@@ -23,7 +26,6 @@
         //console.table(data)
         var options = {
             nodes: {
-                
             },
             layout: {
                 hierarchical: {
