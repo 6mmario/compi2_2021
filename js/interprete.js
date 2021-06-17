@@ -25,8 +25,11 @@ function parseQuery() {
 function crearReporteErrores(){
     var reporte = "<!DOCTYPE html>\n\
     <html lang=\"en\">\n\n\
+    <body>\n\
     <head>\n\
       <title>XPath - Reporte de erroes</title>\n\
+    </head>\n\
+    <h4>Reporte de Errores</h4>\n\
     <table class=\"table table-striped\">\n\
     <thead>\n\
       <tr>\n\
@@ -43,7 +46,7 @@ function crearReporteErrores(){
         <th>" + i + "</th><th>" + error.tipo + "</th><th>" + error.descripcion + "</th><th>" + error.fila + "</th><th>" + error.columna + "</th>" ;
         i = i + 1;
     });
-    reporte+="</table></html>";    
+    reporte+="</table></body></html>";    
     var blob = new Blob([reporte], { type: "html/plain;charset=utf-8" });
     saveAs(blob, "ReporteErrores.html");
 }
