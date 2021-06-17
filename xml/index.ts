@@ -80,7 +80,7 @@ const objetos = Gramatica1.parse(cadena);
     //console.log("Errores encontrados:\n", objetos['errores']);
 
   var nodoCSTRaiz: nodoCST = <nodoCST> objetos['nodoCST']
-  var DOTCST:string = nodoCSTRaiz.generarDotString();
+  var DOTCST:string = 'dinetwork {' + nodoCSTRaiz.generarDotString() + '}'; // Genera la estructura tipo DOT para que vis.js pueda graficarla
   //console.log(DOTCST);
   return { "tablaSimb":elementoRaiz, "DOTCST":DOTCST };
 }
