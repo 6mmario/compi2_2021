@@ -24,7 +24,7 @@ export class Elemento{
         //console.log("Hijos insertados: ",lista_elementos);
     }
 
-    construirTablaSimbolos(ambitoAnterior:any):Ambito{ // Construira la tabla de simbolos de 'lista_atributos' y 'lista_elementos' -> Esta es una funcion RECURSIVA
+    getTablaSimbolos(ambitoAnterior:any):Ambito{ // Construira la tabla de simbolos de 'lista_atributos' y 'lista_elementos' -> Esta es una funcion RECURSIVA
         this.ambito = new Ambito(ambitoAnterior);
         // SI la this.lista_atributos esta vacia, el foreach no se ejecuta, ni da error
         this.lista_atributos.forEach(atributo =>{ 
