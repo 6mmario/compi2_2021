@@ -1,12 +1,14 @@
 var lista_errores = [];
 
-function ejecutarAnalisis() {
+function parseQuery() {
+    setConsola("");
     var entradaXML = getXML();
     var entradaQuery = getXPath();
     try{
         var xml = gramatica1.parse(entradaXML);
         var query = gramatica.parse(entradaQuery);
         const ambitoGlobal = xml.elemento.getTablaSimbolos(null); 
+        console.log(ambitoGlobal);
         query.forEach(consulta => {
             consulta.forEach(nodo => {
                 console.log(nodo.identificador)
