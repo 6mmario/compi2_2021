@@ -56,35 +56,15 @@ function analizadorDes() {
     //    document.body.appendChild(myTable);
     console.log(generarTablaErroresHtml(objetos['errores']));
 }
-function analizadorAsc() {
-    const objetos = Gramatica1.parse(`
-<?xml version="1.0" encoding="UTF-8"?>
-<bookstore libreria="Usac" ciudad="Guatemala">
-  <book category="children">
-          hola    &amp; mundo
-    <title>   !ABC ABC</title>
-    <author>!2013 = "abc_123"
-    continuacion </author>
-    <year>2005</year>
-    <price>
-        29.99
-        <WORK>ABC</WORK>
-    </price>
-  </book>
-  <book2 category="web &amp;">
-    <title2>Learning   XML</title2>
-    <author2>Erik     T. Ray = ""?</author2>
-    <year2>2003</year2>
-    <price2>39.95</price2>
-  </book2>
-</bookstore>
-`);
+function analizadorAsc(cadena) {
+    const objetos = Gramatica1.parse(cadena);
     let elementoRaiz = objetos['elemento']; //['elemento'];
     const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
-    console.log("Errores encontrados:\n", objetos['errores']);
+    //console.log("Errores encontrados:\n", objetos['errores']);
     var nodoCSTRaiz = objetos['nodoCST'];
     var DOTCST = nodoCSTRaiz.generarDotString();
-    console.log(DOTCST);
+    //console.log(DOTCST);
+    return { "tablaSimb": elementoRaiz, "DOTCST": DOTCST };
 }
 //analizadorDes();

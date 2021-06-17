@@ -59,7 +59,7 @@
           </div>
           <div class="btn-group btn-group-md">
             <button class="btn btn-danger" onclick="ejecutarCodigoClase()">AnalizarP</button> 
-            <button class="btn btn-danger" onclick="analizadorDes()">AnalizarX</button> 
+            <button class="btn btn-danger" onclick="analizarAscXML()">Analizar A</button> 
           </div>
           <div class="btn-group btn-group-sm">
             <button class="btn btn-tertiary">Tabla de simbolos</button>
@@ -83,7 +83,18 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
               <a class="dropdown-item" target="_blanck" id="cstXpath1" href="./reportes/ast.html">A-Xpath</a>
+              <a class="dropdown-item" target="_blanck" id="cstXpath1" href="./reportes/CST_XML.html">XML</a>
               <a class="dropdown-item" href="#">D-Xpath</a>
+            </div>
+          </div>
+          <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Errores
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <a class="dropdown-item" target="_blanck" id="erroresParserDescendente" href="./reportes/tErrores.html">A-Desc-XML</a>
+              <a class="dropdown-item" href="#">A-Xpath</a>
             </div>
           </div>
         </ul>
