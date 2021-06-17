@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import {Atributo } from '../CLASES/Atributo';
 //const Gramatica1 = require('./GRAMATICAS/Gramatica1');
 //const gdesc = require('./GRAMATICAS/gdesc');
-console.log("Esta funcionando todo");
 function generarTablaErroresHtml(tabla) {
     let tHtml = "<tr> <th>Tipo de Error</th> <th>Texto erroneo</th> <th>Fila</th> <th>Columna</th> </tr>\n"; // cabecera de la tabla
     tabla.forEach(e => {
