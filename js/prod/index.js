@@ -1,34 +1,24 @@
-
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 //import {Atributo } from '../CLASES/Atributo';
-const Gramatica1 = require('./GRAMATICAS/Gramatica1');
-const gdesc = require('./GRAMATICAS/gdesc');
-import { Ambito} from '../CLASES/Ambito';
-import { Elemento } from '../CLASES/Elemento';
-import { Errores } from '../CLASES/Errores';
-import { nodoCST } from '../CLASES/nodoCST';
-
+//const Gramatica1 = require('./GRAMATICAS/Gramatica1');
+//const gdesc = require('./GRAMATICAS/gdesc');
 console.log("Esta funcionando todo");
-
-
-function generarTablaErroresHtml(tabla:[Errores]):string{ // Si existe una tabla de errores genera un string de una estructura tipo tabla de un HTML 
-    let tHtml:string = "<tr> <th>Tipo de Error</th> <th>Texto erroneo</th> <th>Fila</th> <th>Columna</th> </tr>\n"; // cabecera de la tabla
+function generarTablaErroresHtml(tabla) {
+    let tHtml = "<tr> <th>Tipo de Error</th> <th>Texto erroneo</th> <th>Fila</th> <th>Columna</th> </tr>\n"; // cabecera de la tabla
     tabla.forEach(e => {
-      tHtml += `<tr> 
+        tHtml += `<tr> 
       <td>${e.tipoError}</td>
       <td>${e.texto}</td>
       <td>${e.linea}</td>
       <td>${e.columna}</td>
       </tr>\n`;
     });
-  return tHtml;
+    return tHtml;
 }
-
-
-function analizadorDes(){
-  //alert("Si estoy funcionando perro");
-  const objetos = gdesc.parse(
-    `+<!--00
+function analizadorDes() {
+    //alert("Si estoy funcionando perro");
+    const objetos = gdesc.parse(`+<!--00
       esto es un comentario
     -->
     <?xml version="1.0" encoding="UTF-8"?>
@@ -55,12 +45,10 @@ function analizadorDes(){
       </book2>
     </bookstore>
     `);
-
-    let elementoRaiz:Elemento = <Elemento>objetos['elemento'];//['elemento'];
-    const ambitoGlobal:Ambito = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+    let elementoRaiz = objetos['elemento']; //['elemento'];
+    const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
     console.log("Errores encontrados:\n", objetos['errores']);
-
     //var myTable = document.createElement("table");
     //    myTable.id = 'table_id';
     //    //Add your content to the DIV
@@ -68,11 +56,8 @@ function analizadorDes(){
     //    document.body.appendChild(myTable);
     console.log(generarTablaErroresHtml(objetos['errores']));
 }
-
-
-function analizadorAsc(){
-
-const objetos = Gramatica1.parse(`
+function analizadorAsc() {
+    const objetos = Gramatica1.parse(`
 <?xml version="1.0" encoding="UTF-8"?>
 <bookstore libreria="Usac" ciudad="Guatemala">
   <book category="children">
@@ -94,15 +79,12 @@ const objetos = Gramatica1.parse(`
   </book2>
 </bookstore>
 `);
-
-  let elementoRaiz:Elemento = <Elemento>objetos['elemento'];//['elemento'];
-    const ambitoGlobal:Ambito = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+    let elementoRaiz = objetos['elemento']; //['elemento'];
+    const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
     console.log("Errores encontrados:\n", objetos['errores']);
-
-  var nodoCSTRaiz: nodoCST = <nodoCST> objetos['nodoCST']
-  var DOTCST:string = nodoCSTRaiz.generarDotString();
-  console.log(DOTCST);
+    var nodoCSTRaiz = objetos['nodoCST'];
+    var DOTCST = nodoCSTRaiz.generarDotString();
+    console.log(DOTCST);
 }
-
 //analizadorDes();
