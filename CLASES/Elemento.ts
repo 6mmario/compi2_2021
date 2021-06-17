@@ -35,7 +35,7 @@ export class Elemento{
         // SI la this.lista_elementos esta vacia, el foreach no se ejecuta, ni da error
         this.lista_elementos.forEach(elemento=>{ 
             console.log('elemento ->'+elemento);
-            elemento.construirTablaSimbolos(this.ambito); // contruye la tabla de simbolos del elemento
+            elemento.getTablaSimbolos(this.ambito); // contruye la tabla de simbolos del elemento
             let newSimbolo:Simbolo = new Simbolo(elemento.identificador, Tipo.ELEMENTO, elemento.linea, elemento.columna, elemento); // Almaceno el elemento en el Ambito actual
             this.ambito?.agregar(elemento.identificador, newSimbolo);
         });
