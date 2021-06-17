@@ -100,13 +100,11 @@ expresion_A     : DSLASH expresion_B
                 | expresion_B
                 ;
 
-expresion_B     : expresion_C expresion_Bp
+expresion_B     : expresion_C DSLASH expresion_B
+                | expresion_C SLASH expresion_B
+                | expresion_C
                 ;
 
-expresion_Bp    : DSLASH expresion_C expresion_Bp
-                | SLASH expresion_C expresion_Bp
-                |
-                ;
 
 expresion_C     : expresion_D expresion_Cp
                 ;
