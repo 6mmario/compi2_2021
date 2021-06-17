@@ -80,17 +80,6 @@ BSL                                 "\\".
     const nodo_ast = require('../NODOS/nodo_ast');
 %}
 
-%left 'DSLASH', 'SLASH'
-%left 'AXE'
-%left 'OR'
-%left 'AND'
-%left 'EQUAL' 'ASIG' 'NEQUAL'
-%nonassoc 'LT' 'GT' 'LTE' 'GTE'
-%left 'PLUS' 'MINUS' 'TIMES' 'MOD'
-%left 'MUL' 'DIV'
-%left UMINUS 'NOT'
-%left 'LCOR' 'RCOR'
-
 %start S
 
 %%
@@ -102,5 +91,121 @@ ASIG -> id ASIGP
 ASIGP -> , ASIG
 ASIGP -> ''
 */
-consultas       : expresion expresionP
+consultas       : expresion_A SOR consultas
+                | expresion_A
                 ;
+
+expresion_A     : DSLASH expresion_B
+                | SLASH expresion_B
+                | expresion_B
+                ;
+
+expresion_B     : expresion_C expresion_Bp
+                ;
+
+expresion_Bp    : DSLASH expresion_C expresion_Bp
+                | SLASH expresion_C expresion_Bp
+                |
+                ;
+
+expresion_C     : expresion_D expresion_Cp
+                ;
+
+expresion_Cp    : AXE expresion_D expresion_Cp
+                |
+                ;               
+
+expresion_D     : expresion_E expresion_Dp
+                ;
+
+expresion_Dp    : OR expresion_E expresion_Dp
+                |
+                ;
+
+expresion_E     : expresion_F expresion_Ep
+                ;
+
+expresion_Ep    : AND expresion_F expresion_Ep
+                |
+                ;
+                
+expresion_F     : NOT expresion_G
+                | expresion_G
+                ;
+
+expresion_G     : expresion_H expresion_Gp
+                ;
+
+expresion_Gp    : ASIG expresion_H expresion_Gp
+                | NEQUAL expresion_H expresion_Gp
+                |
+                ;
+
+expresion_H     : expresion_I expresion_Hp
+                ;
+
+expresion_Hp    : GT expresion_I expresion_Hp
+                | GTE expresion_I expresion_Hp
+                | LT expresion_I expresion_Hp
+                | LTE expresion_I expresion_Hp
+                |
+                ;
+
+expresion_I     : expresion_J expresion_Ip
+                ;
+
+expresion_Ip    : PLUS expresion_J expresion_Ip
+                | MINUS expresion_J expresion_Ip
+                |
+                ;
+
+expresion_J     : expresion_K expresion_Jp
+                ;
+
+expresion_Jp    : MOD expresion_K expresion_Jp
+                | DIV expresion_K expresion_Jp
+                | TIMES expresion_K expresion_Jp
+                |
+                ;
+
+expresion_K     : MINUS expresion_L
+                | expresion_L
+                ;
+
+expresion_L     : expresion_M TIMES
+                ;                              
+
+expresion_M     : LPAREN expresion_A RPAREN                     
+                | TIMES                    
+                | DOUBLELITERAL                                  
+                | INTEGERLITERAL                          
+                | STRINGLITERAL                   
+                | CHARLITERAL                      
+                | nodo                           
+                | DOT nodo                     
+                | DDOT nodo                     
+                | DOT                          
+                | DDOT           
+                ;       
+
+nodo            : AT TIMES
+                | AT predicado                   
+                | predicado                                      
+                ;
+
+predicado       : IDENTIFIER cors
+                | IDENTIFIER func
+                | IDENTIFIER                    
+                ;
+
+func            : LPAREN args PAREN
+                | LPAREN RPAREN
+                ;               
+
+args            : expresion COMA args
+                | expresion
+                ;                 
+
+cors            : LCOR expresion RCOR cors         
+                | LCOR expresion RCOR         
+                ;                
