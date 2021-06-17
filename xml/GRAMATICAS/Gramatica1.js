@@ -93,7 +93,6 @@ case 1:
     
 break;
 case 2:
-<<<<<<< HEAD
 
         var raiz = new nodoCST('TAGS'+ conta++,'TAGS');
             raiz.hijos.push($$[$0-1].nodoCST); // TAGS -> PROLOG
@@ -101,9 +100,6 @@ case 2:
         this.$ = {"elemento":$$[$0].elemento, "nodoCST": raiz};
         //this.$ = $$[$0].elemento; /*console.log($$[$0]);*///console.log($$[$0-1].nodo.crearNodosFormatoDOT());
     
-=======
-this.$ = $$[$0]; /*console.log($$[$0]);*/
->>>>>>> feature/graph_3283
 break;
 case 3:
   

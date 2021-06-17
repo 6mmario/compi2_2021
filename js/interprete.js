@@ -1,6 +1,6 @@
 var lista_errores = [];
 
-function ejecutarCodigo() {
+function ejecutarCodigoClase() {
     var entradaXML = getXML();
     var entradaQuery = getXPath();
     var xml = new Elemento(null);    

@@ -92,7 +92,6 @@ START: TAGS EOF         {
     } 
 ;
    
-<<<<<<< HEAD
 TAGS: PROLOG TAG               {
         var raiz = new nodoCST('TAGS'+ conta++,'TAGS');
             raiz.hijos.push($1.nodoCST); // TAGS -> PROLOG
@@ -100,9 +99,6 @@ TAGS: PROLOG TAG               {
         $$ = {"elemento":$2.elemento, "nodoCST": raiz};
         //$$ = $2.elemento; /*console.log($2);*///console.log($1.nodo.crearNodosFormatoDOT());
     } 
-=======
-TAGS: PROLOG TAG               {$$ = $2; /*console.log($2);*/} // objetos tipo TAG ($$ = clase Elemento)
->>>>>>> feature/graph_3283
 ;
 
 // PRODUCCION
