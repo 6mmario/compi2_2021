@@ -27,6 +27,8 @@
   <script src="xpath/Gramatica/gramaticaV2.js"></script>
   <script src="js/prod/nodoCST.js"></script>
   <script src="js/prod/Gramatica1.js"></script>
+  <script src="js/RError.js"></script>
+  <script src="xpath/Gramatica/gramatica.js"></script>
   <script src="js/interprete.js"></script>
   <script src="xpath/MISPRUEBAS/index.js"></script>
   <script src="js/prod/Errores.js"></script>
@@ -80,7 +82,7 @@
               CST
             </button>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-              <a class="dropdown-item" target="_blanck" id="cstXpath" href="./reportes/ast.html">A-Xpath</a>
+              <a class="dropdown-item" target="_blanck" id="cstXpath1" href="./reportes/ast.html">A-Xpath</a>
               <a class="dropdown-item" href="#">D-Xpath</a>
             </div>
           </div>
@@ -138,7 +140,21 @@
         localStorage.removeItem("cst")
         localStorage.removeItem("rg")
         /*Guardando los datos en el LocalStorage*/
-        localStorage.setItem("xpath", nom);
+        //localStorage.setItem("xpath", nom);
+        var hol = ejecutarCodigo(nom)
+      });
+    });
+
+    $(document).ready(function () {
+      $('#cstXpath1').click(function () {
+        /*Captura de datos escrito en los inputs*/
+        var nom = document.getElementById("txtQuery").value;
+        localStorage.removeItem("xpath");
+        localStorage.removeItem("cst")
+        localStorage.removeItem("rg")
+        /*Guardando los datos en el LocalStorage*/
+        //localStorage.setItem("xpath", nom);
+        var hol = ejecutarCodigo(nom)
       });
     });
   </script>

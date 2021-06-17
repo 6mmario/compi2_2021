@@ -70,6 +70,8 @@ BSL                                 "\\".
 //error lexico
 .                                   {
                                         console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                                        setConsola('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                                        lista_errores.push(new RError(yylloc.first_column, yylloc.first_line, "Léxico", "El carácter "+yytext+" no es válido."));
                                     }
 
 <<EOF>>                     return 'EOF'
@@ -133,7 +135,10 @@ expresion       : DSLASH expresion %prec DSLASH     { var lista = []; lista.push
                 | DOT nodo                          { $$ = new Operacion($2,$2,Operador.DOT, @1.first_line, @1.first_column); }
                 | DDOT nodo                         { $$ = new Operacion($2,$2,Operador.DOUBLE_DOT, @1.first_line, @1.first_column); }
                 | DOT                               { $$ = new Operacion(null,null,Operador.DOT, @1.first_line, @1.first_column); }
-                | DDOT                              { $$ = new Operacion(null,null,Operador.DOUBLE_DOT, @1.first_line, @1.first_column); }              
+                | DDOT                              { $$ = new Operacion(null,null,Operador.DOUBLE_DOT, @1.first_line, @1.first_column); }     
+                | error                             { setConsola('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+                                                      lista_errores.push(new RError(this._$.first_column, this._$.first_line, "Sintáctico", "No se esperaba " + yytext));                                               
+                                                    }         
                 ;
 
 nodo            : AT TIMES
