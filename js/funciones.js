@@ -77,7 +77,7 @@ function analizarDescXML(){ // Utilizar la gramatica descendente para analizar l
     let elementoRaiz = objetos['elemento']; // retorna {"elemento": [elementos] , "errores":[array]}
     let arrErrores = objetos['errores'];
     // Verificar si existen errores 
-    console.log(arrErrores);
+    console.log("SIUU", elementoRaiz);
     let continuar =  true;
     if(arrErrores.length > 0)
          continuar = erroresParserXml(arrErrores);
@@ -87,7 +87,7 @@ function analizarDescXML(){ // Utilizar la gramatica descendente para analizar l
     }
     // 2) Construir la tabla de simbolos de la entrada Podemos seguir analizando ya que no hubieron errores
     localStorage.removeItem('terrdescxml');
-    const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+    const ambitoGlobal = elementoRaiz.getTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
 
     return ambitoGlobal;
