@@ -57,7 +57,7 @@ function analizadorDes(){
     `);
 
     let elementoRaiz:Elemento = <Elemento>objetos['elemento'];//['elemento'];
-    const ambitoGlobal:Ambito = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+    const ambitoGlobal:Ambito = elementoRaiz.getTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
     console.log("Errores encontrados:\n", objetos['errores']);
 
@@ -75,7 +75,7 @@ function analizadorAsc(cadena:string):any{
 const objetos = Gramatica1.parse(cadena);
 
   let elementoRaiz:Elemento = <Elemento>objetos['elemento'];//['elemento'];
-    const ambitoGlobal:Ambito = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+    const ambitoGlobal:Ambito = elementoRaiz.getTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
     //console.log("Errores encontrados:\n", objetos['errores']);
 
