@@ -1,3 +1,5 @@
+
+exports.Elemento = void 0;
 class Elemento {
     constructor(identificador, texto, linea, columna, lista_atributos, lista_elementos) {
         this.identificador = identificador;
@@ -31,3 +33,5 @@ class Elemento {
     }
 
 }
+exports.Elemento = Elemento;
+

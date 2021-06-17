@@ -59,11 +59,11 @@ function analizadorDes() {
 function analizadorAsc(cadena) {
     const objetos = Gramatica1.parse(cadena);
     let elementoRaiz = objetos['elemento']; //['elemento'];
-    const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
-    console.log(ambitoGlobal);
+    //const ambitoGlobal = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
+    //console.log(ambitoGlobal);
     //console.log("Errores encontrados:\n", objetos['errores']);
     var nodoCSTRaiz = objetos['nodoCST'];
-    var DOTCST = nodoCSTRaiz.generarDotString();
+    var DOTCST = 'dinetwork {' + nodoCSTRaiz.generarDotString() + '}'; // Genera la estructura tipo DOT para que vis.js pueda graficarla
     //console.log(DOTCST);
     return { "tablaSimb": elementoRaiz, "DOTCST": DOTCST };
 }
