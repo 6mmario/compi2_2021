@@ -70,39 +70,19 @@ function analizadorDes(){
 }
 
 
-function analizadorAsc(){
+function analizadorAsc(cadena:string):any{
 
-const objetos = Gramatica1.parse(`
-<?xml version="1.0" encoding="UTF-8"?>
-<bookstore libreria="Usac" ciudad="Guatemala">
-  <book category="children">
-          hola    &amp; mundo
-    <title>   !ABC ABC</title>
-    <author>!2013 = "abc_123"
-    continuacion </author>
-    <year>2005</year>
-    <price>
-        29.99
-        <WORK>ABC</WORK>
-    </price>
-  </book>
-  <book2 category="web &amp;">
-    <title2>Learning   XML</title2>
-    <author2>Erik     T. Ray = ""?</author2>
-    <year2>2003</year2>
-    <price2>39.95</price2>
-  </book2>
-</bookstore>
-`);
+const objetos = Gramatica1.parse(cadena);
 
   let elementoRaiz:Elemento = <Elemento>objetos['elemento'];//['elemento'];
     const ambitoGlobal:Ambito = elementoRaiz.construirTablaSimbolos(null); // construirTablaSimbolos es funcion recursiva
     console.log(ambitoGlobal);
-    console.log("Errores encontrados:\n", objetos['errores']);
+    //console.log("Errores encontrados:\n", objetos['errores']);
 
   var nodoCSTRaiz: nodoCST = <nodoCST> objetos['nodoCST']
   var DOTCST:string = nodoCSTRaiz.generarDotString();
-  console.log(DOTCST);
+  //console.log(DOTCST);
+  return { "tablaSimb":elementoRaiz, "DOTCST":DOTCST };
 }
 
 //analizadorDes();
