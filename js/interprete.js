@@ -4,7 +4,7 @@ function ejecutarAnalisis() {
     var entradaXML = getXML();
     var entradaQuery = getXPath();
     try{
-        var xml = Gramatica1.parse(entradaXML);
+        var xml = gramatica1.parse(entradaXML);
         var query = gramatica.parse(entradaQuery);
         const ambitoGlobal = xml.elemento.getTablaSimbolos(null); 
         query.forEach(consulta => {
