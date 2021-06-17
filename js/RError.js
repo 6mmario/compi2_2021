@@ -1,6 +1,4 @@
-"use strict";
-exports.__esModule = true;
-exports.RError = void 0;
+
 var RError = /** @class */ (function () {
     function RError(columna, fila, tipo, descripcion) {
         this.columna = columna;

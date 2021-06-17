@@ -65,14 +65,10 @@ comments  \<\!\-\-[\s\S\n]*?\-\-\>   //[\s\S\n]*
 
 //SECCION DE IMPORTS
 %{
-<<<<<<< HEAD
     const {Elemento} = require("../../CLASES/Elemento");
     const {Atributo} = require("../../CLASES/Atributo");
     const {nodoCST} = require("../../CLASES/nodoCST");
     var conta = 0 ; // Unica forma de que la etiquetas sean unicas.
-=======
-
->>>>>>> feature/graph_3283
 %}
 
 // DEFINIMOS PRESEDENCIA DE OPERADORES

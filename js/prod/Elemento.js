@@ -1,9 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Elemento = void 0;
-//const Ambito = require("./Ambito");
-//const Simbolo_1 = require("./Simbolo");
-//const Tipo_1 = require("./Tipo");
 class Elemento {
     constructor(identificador, texto, linea, columna, lista_atributos, lista_elementos) {
         this.identificador = identificador;
@@ -15,7 +9,8 @@ class Elemento {
         //this.ambito = new Ambito(null);
         //console.log("Hijos insertados: ",lista_elementos);
     }
-    construirTablaSimbolos(ambitoAnterior) {
+     
+    getTablaSimbolos(ambitoAnterior){
         this.ambito = new Ambito(ambitoAnterior);
         // SI la this.lista_atributos esta vacia, el foreach no se ejecuta, ni da error
         this.lista_atributos.forEach(atributo => {
@@ -28,11 +23,11 @@ class Elemento {
         this.lista_elementos.forEach(elemento => {
             var _a;
             console.log('elemento ->' + elemento);
-            elemento.construirTablaSimbolos(this.ambito); // contruye la tabla de simbolos del elemento
+            elemento.getTablaSimbolos(this.ambito); // contruye la tabla de simbolos del elemento
             let newSimbolo = new Simbolo(elemento.identificador, Tipo.ELEMENTO, elemento.linea, elemento.columna, elemento); // Almaceno el elemento en el Ambito actual
             (_a = this.ambito) === null || _a === void 0 ? void 0 : _a.agregar(elemento.identificador, newSimbolo);
         });
         return this.ambito; // Podria retornar un ambito que no contiene ni Etiquetas ni Atributos..
     }
+
 }
-exports.Elemento = Elemento;
